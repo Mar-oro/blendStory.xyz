@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>blendStory.xyz - AI tools para historias</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #FFFCFB;
+            min-height: 100vh;
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: #1B211A;
+        }
+
+        .header {
+            background: #8A0000;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: background 0.3s ease;
+        }
+
+        body.dark-mode .header {
+            background: #8A0000;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .logo {
+            color: white;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 30px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        body.dark-mode .search-bar input {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #333;
+        }
+
+        body.dark-mode .search-bar input::placeholder {
+            color: #666;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #8A0000;
+            box-shadow: 0 0 0 3px rgba(138, 0, 0, 0.1);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(180deg);
+        }
+
+        body.dark-mode .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .community-btn {
+            background: white;
+            color: #8A0000;
+            padding: 10px 25px;
+            border-radius: 20px;
+            border: 2px solid white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        body.dark-mode .community-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #8A0000;
+            border-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .community-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: #8A0000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        body.dark-mode .community-btn:hover {
+            background: white;
+            color: #8A0000;
+            border-color: white;
+        }
+
+        .profile-btn {
+            background: white;
+            color: #8A0000;
+            padding: 10px 25px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        body.dark-mode .profile-btn {
+            background: white;
+            color: #8A0000;
+        }
+
+        .profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        body.dark-mode .profile-btn:hover {
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .hero-section {
+            background: #2a3128;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 15px;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .hero-text h1 {
+            color: #ffffff;
+        }
+
+        .hero-text p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .hero-text p {
+            color: #cccccc;
+        }
+
+        .hero-image {
+            width: 200px;
+            height: 200px;
+            background: #8A0000;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+        }
+
+        .section-divider {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #8A0000, transparent);
+            margin: 30px 0;
+        }
+
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s ease;
+            cursor: pointer;
+        }
+
+        body.dark-mode .story-card {
+            background: #2a3128;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .story-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        body.dark-mode .story-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .story-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            color: white;
+        }
+
+        .story-card:nth-child(2) .story-image {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .story-card:nth-child(3) .story-image {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .story-card:nth-child(4) .story-image {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .story-card:nth-child(5) .story-image {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+
+        .story-card:nth-child(6) .story-image {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+
+        .story-info {
+            padding: 20px;
+        }
+
+        .story-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .story-title {
+            color: #ffffff;
+        }
+
+        .story-author {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .story-author {
+            color: #aaaaaa;
+        }
+
+        .story-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: #666;
+            transition: color 0.3s ease;
+        }
+
+        body.dark-mode .story-stats {
+            color: #cccccc;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .search-bar {
+                order: 3;
+                width: 100%;
+                margin: 0;
+            }
+
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 28px;
+            }
+
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">blendStory.xyz</div>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar historias, autores, géneros...">
+        </div>
+        <div class="nav-buttons">
+            <button class="theme-toggle" id="themeToggle" title="Cambiar tema">🌙</button>
+            <button class="community-btn">💬 Comunidad</button>
+            <button class="profile-btn">👤 Perfil</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Anuncios</h1>
+                    <p>Descubre nuevas historias increíbles cada día. Lee, escribe y comparte tus relatos favoritos con una comunidad apasionada por la literatura.</p>
+                </div>
+                <div class="hero-image">📚</div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="stories-grid">
+            <div class="story-card">
+                <div class="story-image">📖</div>
+                <div class="story-info">
+                    <div class="story-title">El Secreto del Jardín</div>
+                    <div class="story-author">por Ana García</div>
+                    <div class="story-stats">
+                        <span class="stat">👁 12.5K</span>
+                        <span class="stat">⭐ 4.8</span>
+                        <span class="stat">💬 234</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-image">✨</div>
+                <div class="story-info">
+                    <div class="story-title">Caminos Cruzados</div>
+                    <div class="story-author">por Carlos Mendez</div>
+                    <div class="story-stats">
+                        <span class="stat">👁 8.2K</span>
+                        <span class="stat">⭐ 4.6</span>
+                        <span class="stat">💬 156</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-image">🌙</div>
+                <div class="story-info">
+                    <div class="story-title">Noches de Luna</div>
+                    <div class="story-author">por María López</div>
+                    <div class="story-stats">
+                        <span class="stat">👁 15.7K</span>
+                        <span class="stat">⭐ 4.9</span>
+                        <span class="stat">💬 389</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-image">🔥</div>
+                <div class="story-info">
+                    <div class="story-title">Llamas del Destino</div>
+                    <div class="story-author">por Diego Ramírez</div>
+                    <div class="story-stats">
+                        <span class="stat">👁 20.1K</span>
+                        <span class="stat">⭐ 4.7</span>
+                        <span class="stat">💬 512</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-image">💫</div>
+                <div class="story-info">
+                    <div class="story-title">Entre Estrellas</div>
+                    <div class="story-author">por Laura Fernández</div>
+                    <div class="story-stats">
+                        <span class="stat">👁 9.8K</span>
+                        <span class="stat">⭐ 4.5</span>
+                        <span class="stat">💬 201</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <div class="story-image">🌸</div>
+                <div class="story-info">
+                    <div class="story-title">Primavera Eterna</div>
+                    <div class="story-author">por Sofia Torres</div>
+                    <div class="story-stats">
+                        <span class="stat">👁 11.3K</span>
+                        <span class="stat">⭐ 4.8</span>
+                        <span class="stat">💬 278</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Añadir interactividad a las tarjetas
+        const storyCards = document.querySelectorAll('.story-card');
+        storyCards.forEach(card => {
+            card.addEventListener('click', function() {
+                alert('Abriendo historia...');
+            });
+        });
+
+        // Funcionalidad de búsqueda
+        const searchInput = document.querySelector('.search-bar input');
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                alert('Buscando: ' + this.value);
+            }
+        });
+
+        // Botón de comunidad
+        const communityBtn = document.querySelector('.community-btn');
+        communityBtn.addEventListener('click', function() {
+            alert('Abriendo foro de la comunidad...');
+        });
+
+        // Toggle de tema oscuro/claro
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Verificar si hay un tema guardado
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>
