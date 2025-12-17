@@ -1,523 +1,607 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>blendStory.xyz - AI tools para historias</title>
+    <title>blendStory - AI Co-Writer</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #FFFCFB;
-            min-height: 100vh;
-            transition: background 0.3s ease;
+            font-family: 'Courier New', Courier, monospace;
+            height: 100vh;
+            overflow: hidden;
+            background: #1a160a;
+            color: #e5e0d0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
-
-        body.dark-mode {
-            background: #1B211A;
+        
+        /* HEXAGONAL LINE PATTERN BACKGROUND */
+        .hex-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.5;
         }
-
+        
+        .hex-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .hex {
+            position: absolute;
+            width: 40px;
+            height: 46px;
+            transition: all 0.3s ease;
+        }
+        
+        .hex svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+        
+        .hex polygon {
+            stroke: #4a3a1a;
+            fill: none;
+            stroke-width: 1.5;
+        }
+        
         .header {
-            background: #8A0000;
-            padding: 15px 30px;
+            padding: 20px 40px;
+            border-bottom: 1px solid #4a3a1a;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: background 0.3s ease;
+            background: #1a160a;
+            position: relative;
+            z-index: 10;
         }
-
-        body.dark-mode .header {
-            background: #8A0000;
-        }
-
-        .logo {
+        
+        h1 {
             font-size: 28px;
-            font-weight: bold;
-            color: white;
-            transition: all 0.3s ease;
+            font-weight: 300;
+            letter-spacing: 4px;
+            color: #ffcc33;
+            text-shadow: 0 0 20px rgba(255, 204, 51, 0.3);
         }
-
-        body.dark-mode .logo {
-            color: white;
+        
+        .tagline {
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: #8a7a5a;
+            text-transform: uppercase;
         }
-
-        .search-bar {
+        
+        .content-area {
             flex: 1;
-            max-width: 500px;
-            margin: 0 30px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .hero-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+        
+        .hero-text {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            letter-spacing: 1px;
+            color: #d0c0a0;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .feature {
+            border: 1px solid #4a3a1a;
+            padding: 2.5rem;
+            background: rgba(26, 22, 10, 0.8);
+            transition: all 0.3s;
             position: relative;
         }
-
-        .search-bar input {
+        
+        .feature::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 12px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
-            font-size: 14px;
-            transition: all 0.3s;
-            background: white;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffcc33, transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
-
-        body.dark-mode .search-bar input {
-            background: rgba(255, 255, 255, 0.95);
-            border-color: rgba(255, 255, 255, 0.3);
-            color: #333;
+        
+        .feature:hover {
+            border-color: #ffcc33;
+            box-shadow: 0 0 30px rgba(255, 204, 51, 0.2);
         }
-
-        body.dark-mode .search-bar input::placeholder {
-            color: #666;
+        
+        .feature:hover::before {
+            opacity: 1;
         }
-
-        .search-bar input:focus {
-            outline: none;
-            border-color: #8A0000;
-            box-shadow: 0 0 0 3px rgba(138, 0, 0, 0.1);
+        
+        .feature-icon {
+            font-size: 2rem;
+            color: #ffcc33;
+            margin-bottom: 1rem;
         }
-
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-            align-items: center;
+        
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #ffcc33;
+            letter-spacing: 2px;
         }
-
-        .theme-toggle {
-            background: transparent;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: all 0.3s;
-        }
-
-        .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: rotate(180deg);
-        }
-
-        body.dark-mode .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .community-btn {
-            background: white;
-            color: #8A0000;
-            padding: 10px 25px;
-            border-radius: 20px;
-            border: 2px solid white;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        body.dark-mode .community-btn {
-            background: rgba(255, 255, 255, 0.95);
-            color: #8A0000;
-            border-color: rgba(255, 255, 255, 0.95);
-        }
-
-        .community-btn:hover {
-            background: rgba(255, 255, 255, 0.9);
-            color: #8A0000;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
-        }
-
-        body.dark-mode .community-btn:hover {
-            background: white;
-            color: #8A0000;
-            border-color: white;
-        }
-
-        .profile-btn {
-            background: white;
-            color: #8A0000;
-            padding: 10px 25px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-
-        body.dark-mode .profile-btn {
-            background: white;
-            color: #8A0000;
-        }
-
-        .profile-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
-        }
-
-        body.dark-mode .profile-btn:hover {
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .hero-section {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        body.dark-mode .hero-section {
-            background: #2a3128;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        .hero-content {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-
-        .hero-text {
-            flex: 1;
-        }
-
-        .hero-text h1 {
-            font-size: 36px;
-            color: #333;
-            margin-bottom: 15px;
-            transition: color 0.3s ease;
-        }
-
-        body.dark-mode .hero-text h1 {
-            color: #ffffff;
-        }
-
-        .hero-text p {
-            color: #666;
-            font-size: 16px;
+        
+        .feature-desc {
+            color: #8a7a5a;
+            font-size: 0.95rem;
             line-height: 1.6;
-            transition: color 0.3s ease;
         }
-
-        body.dark-mode .hero-text p {
-            color: #cccccc;
+        
+        .writing-showcase {
+            background: rgba(10, 8, 5, 0.9);
+            border: 1px solid #ffcc33;
+            padding: 3rem 2rem;
+            margin: 0 40px 4rem;
+            position: relative;
         }
-
-        .hero-image {
-            width: 200px;
-            height: 200px;
-            background: #8A0000;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            color: white;
+        
+        .writing-showcase h2 {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            color: #ffcc33;
+            text-align: center;
+            letter-spacing: 3px;
         }
-
-        .section-divider {
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #8A0000, transparent);
-            margin: 30px 0;
-        }
-
-        .stories-grid {
+        
+        .writing-modes {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
-
-        .story-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s, background 0.3s ease;
+        
+        .writing-mode {
+            background: #1a160a;
+            border: 1px solid #4a3a1a;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
             cursor: pointer;
         }
-
-        body.dark-mode .story-card {
-            background: #2a3128;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .story-card:hover {
+        
+        .writing-mode:hover {
+            border-color: #ffcc33;
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 20px rgba(255, 204, 51, 0.3);
         }
-
-        body.dark-mode .story-card:hover {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        
+        .mode-name {
+            color: #ffcc33;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
         }
-
-        .story-image {
+        
+        .mode-desc {
+            color: #8a7a5a;
+            font-size: 0.85rem;
+        }
+        
+        .sample-preview {
+            background: rgba(10, 8, 5, 0.9);
+            border-left: 3px solid #ffcc33;
+            padding: 2rem;
+            margin: 0 40px 4rem;
+        }
+        
+        .sample-preview h3 {
+            font-size: 1.5rem;
+            color: #ffcc33;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+        
+        .sample-text {
+            color: #d0c0a0;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            font-style: italic;
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            background: #1a160a;
+            border: 1px solid #4a3a1a;
+        }
+        
+        .sample-meta {
+            display: flex;
+            gap: 2rem;
+            color: #8a7a5a;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 4rem 40px;
+            background: rgba(10, 8, 5, 0.9);
+            border-top: 1px solid #4a3a1a;
+        }
+        
+        .cta-text {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: #d0c0a0;
+            letter-spacing: 2px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: transparent;
+            color: #ffcc33;
+            border: 2px solid #ffcc33;
+            padding: 1.2rem 3.5rem;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 64px;
-            color: white;
+            height: 100%;
+            background: #ffcc33;
+            transition: left 0.3s;
+            z-index: -1;
         }
-
-        .story-card:nth-child(2) .story-image {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        
+        .cta-button:hover::before {
+            left: 0;
         }
-
-        .story-card:nth-child(3) .story-image {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        
+        .cta-button:hover {
+            color: #1a160a;
+            box-shadow: 0 0 40px rgba(255, 204, 51, 0.4);
         }
-
-        .story-card:nth-child(4) .story-image {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            border-top: 1px solid #4a3a1a;
+            background: #1a160a;
+            position: relative;
+            z-index: 10;
         }
-
-        .story-card:nth-child(5) .story-image {
-            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        
+        .powered {
+            color: #8a7a5a;
+            font-size: 0.9rem;
         }
-
-        .story-card:nth-child(6) .story-image {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        
+        .powered a {
+            color: #d0c0a0;
+            text-decoration: none;
+            transition: color 0.3s;
         }
-
-        .story-info {
-            padding: 20px;
+        
+        .powered a:hover {
+            color: #ffcc33;
         }
-
-        .story-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 8px;
-            transition: color 0.3s ease;
+        
+        /* Scrollbar styling */
+        .content-area::-webkit-scrollbar {
+            width: 8px;
         }
-
-        body.dark-mode .story-title {
-            color: #ffffff;
+        
+        .content-area::-webkit-scrollbar-track {
+            background: #1a160a;
         }
-
-        .story-author {
-            font-size: 14px;
-            color: #999;
-            margin-bottom: 12px;
-            transition: color 0.3s ease;
+        
+        .content-area::-webkit-scrollbar-thumb {
+            background: #4a3a1a;
+            border-radius: 4px;
         }
-
-        body.dark-mode .story-author {
-            color: #aaaaaa;
+        
+        .content-area::-webkit-scrollbar-thumb:hover {
+            background: #ffcc33;
         }
-
-        .story-stats {
-            display: flex;
-            gap: 15px;
-            font-size: 13px;
-            color: #666;
-            transition: color 0.3s ease;
-        }
-
-        body.dark-mode .story-stats {
-            color: #cccccc;
-        }
-
-        .stat {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
+        
         @media (max-width: 768px) {
             .header {
-                flex-wrap: wrap;
-                gap: 15px;
-            }
-
-            .search-bar {
-                order: 3;
-                width: 100%;
-                margin: 0;
-            }
-
-            .hero-content {
                 flex-direction: column;
-                text-align: center;
+                gap: 1rem;
+                padding: 20px;
             }
-
-            .hero-text h1 {
-                font-size: 28px;
+            
+            h1 {
+                font-size: 20px;
             }
-
-            .stories-grid {
+            
+            .hero-section {
+                padding: 40px 20px;
+            }
+            
+            .hero-text {
+                font-size: 1.1rem;
+            }
+            
+            .features-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .writing-showcase, .sample-preview, .cta-section {
+                margin: 0 20px 3rem;
+                padding: 2rem 1.5rem;
             }
         }
     </style>
 </head>
 <body>
+    <div class="hex-background">
+        <div class="hex-pattern"></div>
+    </div>
+    
     <header class="header">
-        <div class="logo">blendStory.xyz</div>
-        <div class="search-bar">
-            <input type="text" placeholder="Buscar historias, autores, géneros...">
-        </div>
-        <div class="nav-buttons">
-            <button class="theme-toggle" id="themeToggle" title="Cambiar tema">🌙</button>
-            <button class="community-btn">💬 Comunidad</button>
-            <button class="profile-btn">👤 Perfil</button>
+        <div>
+            <h1>blendStory</h1>
+            <p class="tagline">your AI co-writing partner</p>
         </div>
     </header>
-
-    <div class="container">
-        <div class="hero-section">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <h1>Anuncios</h1>
-                    <p>Descubre nuevas historias increíbles cada día. Lee, escribe y comparte tus relatos favoritos con una comunidad apasionada por la literatura.</p>
-                </div>
-                <div class="hero-image">📚</div>
-            </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <div class="stories-grid">
-            <div class="story-card">
-                <div class="story-image">📖</div>
-                <div class="story-info">
-                    <div class="story-title">El Secreto del Jardín</div>
-                    <div class="story-author">por Ana García</div>
-                    <div class="story-stats">
-                        <span class="stat">👁 12.5K</span>
-                        <span class="stat">⭐ 4.8</span>
-                        <span class="stat">💬 234</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="story-card">
-                <div class="story-image">✨</div>
-                <div class="story-info">
-                    <div class="story-title">Caminos Cruzados</div>
-                    <div class="story-author">por Carlos Mendez</div>
-                    <div class="story-stats">
-                        <span class="stat">👁 8.2K</span>
-                        <span class="stat">⭐ 4.6</span>
-                        <span class="stat">💬 156</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="story-card">
-                <div class="story-image">🌙</div>
-                <div class="story-info">
-                    <div class="story-title">Noches de Luna</div>
-                    <div class="story-author">por María López</div>
-                    <div class="story-stats">
-                        <span class="stat">👁 15.7K</span>
-                        <span class="stat">⭐ 4.9</span>
-                        <span class="stat">💬 389</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="story-card">
-                <div class="story-image">🔥</div>
-                <div class="story-info">
-                    <div class="story-title">Llamas del Destino</div>
-                    <div class="story-author">por Diego Ramírez</div>
-                    <div class="story-stats">
-                        <span class="stat">👁 20.1K</span>
-                        <span class="stat">⭐ 4.7</span>
-                        <span class="stat">💬 512</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="story-card">
-                <div class="story-image">💫</div>
-                <div class="story-info">
-                    <div class="story-title">Entre Estrellas</div>
-                    <div class="story-author">por Laura Fernández</div>
-                    <div class="story-stats">
-                        <span class="stat">👁 9.8K</span>
-                        <span class="stat">⭐ 4.5</span>
-                        <span class="stat">💬 201</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="story-card">
-                <div class="story-image">🌸</div>
-                <div class="story-info">
-                    <div class="story-title">Primavera Eterna</div>
-                    <div class="story-author">por Sofia Torres</div>
-                    <div class="story-stats">
-                        <span class="stat">👁 11.3K</span>
-                        <span class="stat">⭐ 4.8</span>
-                        <span class="stat">💬 278</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Añadir interactividad a las tarjetas
-        const storyCards = document.querySelectorAll('.story-card');
-        storyCards.forEach(card => {
-            card.addEventListener('click', function() {
-                alert('Abriendo historia...');
-            });
-        });
-
-        // Funcionalidad de búsqueda
-        const searchInput = document.querySelector('.search-bar input');
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                alert('Buscando: ' + this.value);
-            }
-        });
-
-        // Botón de comunidad
-        const communityBtn = document.querySelector('.community-btn');
-        communityBtn.addEventListener('click', function() {
-            alert('Abriendo foro de la comunidad...');
-        });
-
-        // Toggle de tema oscuro/claro
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
+    
+    <div class="content-area">
+        <section class="hero-section">
+            <p class="hero-text">
+                stories don't write themselves. but they can write with you.
+                your co-author never sleeps. never judges. always ready.
+                break through blocks. explore ideas. finish what you started.
+            </p>
+        </section>
         
-        // Verificar si hay un tema guardado
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            body.classList.add('dark-mode');
-            themeToggle.textContent = '☀️';
-        }
-
-        themeToggle.addEventListener('click', function() {
-            body.classList.toggle('dark-mode');
+        <div class="features-grid">
+            <div class="feature">
+                <div class="feature-icon">◆</div>
+                <h3 class="feature-title">collaborate</h3>
+                <p class="feature-desc">
+                    write alongside an entity that understands narrative structure.
+                    suggest plot turns. develop characters. maintain consistency.
+                </p>
+            </div>
             
-            if (body.classList.contains('dark-mode')) {
-                themeToggle.textContent = '☀️';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                themeToggle.textContent = '🌙';
-                localStorage.setItem('theme', 'light');
+            <div class="feature">
+                <div class="feature-icon">▲</div>
+                <h3 class="feature-title">accelerate</h3>
+                <p class="feature-desc">
+                    outline to first draft in hours, not weeks.
+                    iterate on scenes. explore alternatives. keep momentum.
+                </p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">●</div>
+                <h3 class="feature-title">expand</h3>
+                <p class="feature-desc">
+                    generate alternate endings. branch storylines.
+                    test different character voices. see what works.
+                </p>
+            </div>
+        </div>
+        
+        <section class="writing-showcase">
+            <h2>your writing modes</h2>
+            <p style="text-align: center; color: #8a7a5a; margin-bottom: 2rem;">
+                choose how you want to work together
+            </p>
+            
+            <div class="writing-modes">
+                <div class="writing-mode">
+                    <div class="mode-name">outline</div>
+                    <p class="mode-desc">structure your story beats</p>
+                </div>
+                
+                <div class="writing-mode">
+                    <div class="mode-name">draft</div>
+                    <p class="mode-desc">rapid first-pass writing</p>
+                </div>
+                
+                <div class="writing-mode">
+                    <div class="mode-name">refine</div>
+                    <p class="mode-desc">polish existing scenes</p>
+                </div>
+                
+                <div class="writing-mode">
+                    <div class="mode-name">brainstorm</div>
+                    <p class="mode-desc">explore new directions</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="sample-preview">
+            <h3>collaborative writing</h3>
+            <div class="sample-text">
+                → you write the vision<br>
+                → AI helps execute<br>
+                → you maintain creative control<br>
+            </div>
+            <p style="color: #8a7a5a; font-size: 0.9rem; margin-top: 1rem;">
+                not replacing writers. empowering them.<br>
+                the tool that helps you finish your novel.
+            </p>
+        </section>
+        
+        <section class="cta-section">
+            <p class="cta-text">ready to write together?</p>
+            <a href="#" class="cta-button">start co-writing</a>
+        </section>
+    </div>
+    
+    <footer>
+        <p class="powered">powered by <a href="https://lempyra.com">Lempyrλ</a></p>
+    </footer>
+    
+    <script>
+        function generateHexPattern() {
+            const container = document.querySelector('.hex-pattern');
+            container.innerHTML = '';
+            
+            const hexWidth = 40;
+            const hexHeight = 46;
+            const cols = Math.ceil(window.innerWidth / (hexWidth * 0.75)) + 2;
+            const rows = Math.ceil(window.innerHeight / hexHeight) + 2;
+            
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const hex = document.createElement('div');
+                    hex.className = 'hex';
+                    hex.dataset.col = col;
+                    hex.dataset.row = row;
+                    
+                    const offsetX = col * hexWidth * 0.75;
+                    const offsetY = row * hexHeight + (col % 2) * (hexHeight / 2);
+                    
+                    hex.style.left = offsetX + 'px';
+                    hex.style.top = offsetY + 'px';
+                    
+                    hex.innerHTML = `
+                        <svg viewBox="0 0 40 46">
+                            <polygon points="20,1 38,12 38,34 20,45 2,34 2,12" />
+                        </svg>
+                    `;
+                    
+                    container.appendChild(hex);
+                }
             }
-        });
+            
+            startWavePulse();
+        }
+        
+        function startWavePulse() {
+            const hexes = document.querySelectorAll('.hex');
+            const themeColor = '#ffcc33';
+            const baseColor = '#4a3a1a';
+            
+            function createWave(startCol, startRow) {
+                hexes.forEach(hex => {
+                    const col = parseInt(hex.dataset.col);
+                    const row = parseInt(hex.dataset.row);
+                    
+                    const distance = Math.sqrt(
+                        Math.pow(col - startCol, 2) + 
+                        Math.pow(row - startRow, 2)
+                    );
+                    
+                    setTimeout(() => {
+                        const polygon = hex.querySelector('polygon');
+                        polygon.style.transition = 'all 0.3s ease-out';
+                        polygon.setAttribute('stroke', themeColor);
+                        polygon.setAttribute('stroke-width', '3');
+                        polygon.setAttribute('fill', themeColor);
+                        polygon.setAttribute('fill-opacity', '0.3');
+                        hex.style.transform = 'scale(1.1)';
+                        hex.style.opacity = '1';
+                        
+                        setTimeout(() => {
+                            polygon.style.transition = 'all 0.5s ease-in';
+                            polygon.setAttribute('stroke', baseColor);
+                            polygon.setAttribute('stroke-width', '1.5');
+                            polygon.setAttribute('fill', 'none');
+                            polygon.setAttribute('fill-opacity', '0');
+                            hex.style.transform = 'scale(1)';
+                            hex.style.opacity = '0.5';
+                        }, 600);
+                    }, distance * 50);
+                });
+            }
+            
+            document.addEventListener('click', (e) => {
+                const hexWidth = 40;
+                const hexHeight = 46;
+                const clickCol = Math.floor(e.clientX / (hexWidth * 0.75));
+                const clickRow = Math.floor(e.clientY / hexHeight);
+                
+                const colors = ['#ffcc33', '#ffdd55', '#eebb22', '#ccaa00'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                hexes.forEach(hex => {
+                    const col = parseInt(hex.dataset.col);
+                    const row = parseInt(hex.dataset.row);
+                    
+                    const distance = Math.sqrt(
+                        Math.pow(col - clickCol, 2) + 
+                        Math.pow(row - clickRow, 2)
+                    );
+                    
+                    setTimeout(() => {
+                        const polygon = hex.querySelector('polygon');
+                        polygon.style.transition = 'all 0.3s ease-out';
+                        polygon.setAttribute('stroke', randomColor);
+                        polygon.setAttribute('stroke-width', '3.5');
+                        polygon.setAttribute('fill', randomColor);
+                        polygon.setAttribute('fill-opacity', '0.4');
+                        hex.style.transform = 'scale(1.15)';
+                        hex.style.opacity = '1';
+                        
+                        setTimeout(() => {
+                            polygon.style.transition = 'all 0.5s ease-in';
+                            polygon.setAttribute('stroke', baseColor);
+                            polygon.setAttribute('stroke-width', '1.5');
+                            polygon.setAttribute('fill', 'none');
+                            polygon.setAttribute('fill-opacity', '0');
+                            hex.style.transform = 'scale(1)';
+                            hex.style.opacity = '0.5';
+                        }, 600);
+                    }, distance * 50);
+                });
+            });
+            
+            function scheduleNextWave() {
+                const interval = 3000 + Math.random() * 4000;
+                setTimeout(() => {
+                    const startCol = Math.floor(Math.random() * 20);
+                    const startRow = Math.floor(Math.random() * 15);
+                    createWave(startCol, startRow);
+                    scheduleNextWave();
+                }, interval);
+            }
+            
+            scheduleNextWave();
+            const startCol = Math.floor(Math.random() * 20);
+            const startRow = Math.floor(Math.random() * 15);
+            createWave(startCol, startRow);
+        }
+        
+        window.addEventListener('load', generateHexPattern);
+        window.addEventListener('resize', generateHexPattern);
     </script>
 </body>
 </html>
