@@ -1,607 +1,621 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>blendStory - AI Co-Writer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            height: 100vh;
-            overflow: hidden;
-            background: #1a160a;
-            color: #e5e0d0;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-        
-        /* HEXAGONAL LINE PATTERN BACKGROUND */
-        .hex-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.5;
-        }
-        
-        .hex-pattern {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .hex {
-            position: absolute;
-            width: 40px;
-            height: 46px;
-            transition: all 0.3s ease;
-        }
-        
-        .hex svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
-        
-        .hex polygon {
-            stroke: #4a3a1a;
-            fill: none;
-            stroke-width: 1.5;
-        }
-        
-        .header {
-            padding: 20px 40px;
-            border-bottom: 1px solid #4a3a1a;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #1a160a;
-            position: relative;
-            z-index: 10;
-        }
-        
-        h1 {
-            font-size: 28px;
-            font-weight: 300;
-            letter-spacing: 4px;
-            color: #ffcc33;
-            text-shadow: 0 0 20px rgba(255, 204, 51, 0.3);
-        }
-        
-        .tagline {
-            font-size: 11px;
-            letter-spacing: 2px;
-            color: #8a7a5a;
-            text-transform: uppercase;
-        }
-        
-        .content-area {
-            flex: 1;
-            overflow-y: auto;
-            position: relative;
-            z-index: 5;
-        }
-        
-        .hero-section {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 60px 40px;
-        }
-        
-        .hero-text {
-            font-size: 1.4rem;
-            line-height: 1.8;
-            margin-bottom: 3rem;
-            letter-spacing: 1px;
-            color: #d0c0a0;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-        
-        .feature {
-            border: 1px solid #4a3a1a;
-            padding: 2.5rem;
-            background: rgba(26, 22, 10, 0.8);
-            transition: all 0.3s;
-            position: relative;
-        }
-        
-        .feature::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #ffcc33, transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .feature:hover {
-            border-color: #ffcc33;
-            box-shadow: 0 0 30px rgba(255, 204, 51, 0.2);
-        }
-        
-        .feature:hover::before {
-            opacity: 1;
-        }
-        
-        .feature-icon {
-            font-size: 2rem;
-            color: #ffcc33;
-            margin-bottom: 1rem;
-        }
-        
-        .feature-title {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: #ffcc33;
-            letter-spacing: 2px;
-        }
-        
-        .feature-desc {
-            color: #8a7a5a;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-        
-        .writing-showcase {
-            background: rgba(10, 8, 5, 0.9);
-            border: 1px solid #ffcc33;
-            padding: 3rem 2rem;
-            margin: 0 40px 4rem;
-            position: relative;
-        }
-        
-        .writing-showcase h2 {
-            font-size: 2rem;
-            font-weight: 300;
-            margin-bottom: 2rem;
-            color: #ffcc33;
-            text-align: center;
-            letter-spacing: 3px;
-        }
-        
-        .writing-modes {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-        
-        .writing-mode {
-            background: #1a160a;
-            border: 1px solid #4a3a1a;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .writing-mode:hover {
-            border-color: #ffcc33;
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(255, 204, 51, 0.3);
-        }
-        
-        .mode-name {
-            color: #ffcc33;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            letter-spacing: 1px;
-        }
-        
-        .mode-desc {
-            color: #8a7a5a;
-            font-size: 0.85rem;
-        }
-        
-        .sample-preview {
-            background: rgba(10, 8, 5, 0.9);
-            border-left: 3px solid #ffcc33;
-            padding: 2rem;
-            margin: 0 40px 4rem;
-        }
-        
-        .sample-preview h3 {
-            font-size: 1.5rem;
-            color: #ffcc33;
-            margin-bottom: 1.5rem;
-            font-weight: 300;
-        }
-        
-        .sample-text {
-            color: #d0c0a0;
-            font-size: 1.1rem;
-            line-height: 1.8;
-            font-style: italic;
-            margin-bottom: 1rem;
-            padding: 1.5rem;
-            background: #1a160a;
-            border: 1px solid #4a3a1a;
-        }
-        
-        .sample-meta {
-            display: flex;
-            gap: 2rem;
-            color: #8a7a5a;
-            font-size: 0.9rem;
-            margin-top: 1rem;
-        }
-        
-        .cta-section {
-            text-align: center;
-            padding: 4rem 40px;
-            background: rgba(10, 8, 5, 0.9);
-            border-top: 1px solid #4a3a1a;
-        }
-        
-        .cta-text {
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            color: #d0c0a0;
-            letter-spacing: 2px;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            background: transparent;
-            color: #ffcc33;
-            border: 2px solid #ffcc33;
-            padding: 1.2rem 3.5rem;
-            text-decoration: none;
-            font-size: 1.1rem;
-            transition: all 0.3s;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .cta-button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: #ffcc33;
-            transition: left 0.3s;
-            z-index: -1;
-        }
-        
-        .cta-button:hover::before {
-            left: 0;
-        }
-        
-        .cta-button:hover {
-            color: #1a160a;
-            box-shadow: 0 0 40px rgba(255, 204, 51, 0.4);
-        }
-        
-        footer {
-            text-align: center;
-            padding: 1.5rem;
-            border-top: 1px solid #4a3a1a;
-            background: #1a160a;
-            position: relative;
-            z-index: 10;
-        }
-        
-        .powered {
-            color: #8a7a5a;
-            font-size: 0.9rem;
-        }
-        
-        .powered a {
-            color: #d0c0a0;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .powered a:hover {
-            color: #ffcc33;
-        }
-        
-        /* Scrollbar styling */
-        .content-area::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .content-area::-webkit-scrollbar-track {
-            background: #1a160a;
-        }
-        
-        .content-area::-webkit-scrollbar-thumb {
-            background: #4a3a1a;
-            border-radius: 4px;
-        }
-        
-        .content-area::-webkit-scrollbar-thumb:hover {
-            background: #ffcc33;
-        }
-        
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 20px;
-            }
-            
-            .hero-section {
-                padding: 40px 20px;
-            }
-            
-            .hero-text {
-                font-size: 1.1rem;
-            }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .writing-showcase, .sample-preview, .cta-section {
-                margin: 0 20px 3rem;
-                padding: 2rem 1.5rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>blendStory — the collaborative codex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@300;400&display=swap">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#090705;
+  --gold:#c8a84b;
+  --gold-e:#ffcc33;
+  --crimson:#7a1515;
+  --verd:#3a6b5a;
+  --parch:#d4c49a;
+  --dim:#6a5836;
+  --faint:#2a1e0a;
+  --border:#2e2208;
+}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'IM Fell English',serif;
+  background:var(--bg);
+  color:var(--parch);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+/* scanlines */
+body::after{
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.05) 3px,rgba(0,0,0,.05) 4px);
+  pointer-events:none;z-index:9000;
+}
+/* hex background */
+.hex-background{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden;opacity:.35;}
+.hex-pattern{position:absolute;width:100%;height:100%;}
+.hex{position:absolute;width:40px;height:46px;transition:all .3s ease;}
+.hex svg{width:100%;height:100%;overflow:visible;}
+.hex polygon{stroke:#2e2208;fill:none;stroke-width:1;}
+
+/* ─ HEADER ─ */
+.header{
+  position:relative;z-index:10;
+  padding:24px 48px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.header-rule{
+  position:absolute;bottom:0;left:0;right:0;
+  height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--crimson),var(--gold),transparent);
+  opacity:.3;
+}
+.logo{
+  font-family:'Cinzel',serif;
+  font-size:22px;
+  font-weight:400;
+  color:var(--gold);
+  letter-spacing:4px;
+  text-shadow:0 0 40px rgba(200,168,75,.2);
+}
+.logo-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  letter-spacing:3px;
+  color:var(--dim);
+  text-transform:uppercase;
+  margin-top:3px;
+}
+.enter-btn{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:3px;
+  color:var(--gold);
+  text-decoration:none;
+  border:1px solid var(--border);
+  padding:9px 20px;
+  transition:border-color .3s,box-shadow .3s,background .3s;
+}
+.enter-btn:hover{
+  border-color:var(--gold);
+  box-shadow:0 0 20px rgba(200,168,75,.1);
+  background:rgba(200,168,75,.04);
+}
+
+/* ─ MANUSCRIPT COLUMN ─ */
+.scroll-wrap{
+  position:relative;z-index:10;
+  padding:0 24px 80px;
+}
+.manuscript{
+  max-width:760px;
+  margin:0 auto;
+  padding:60px 40px 60px 80px;
+  position:relative;
+}
+/* crimson margin line */
+.manuscript::before{
+  content:'';
+  position:absolute;
+  left:56px;top:0;bottom:0;
+  width:1px;
+  background:linear-gradient(to bottom,transparent,var(--crimson) 5%,var(--crimson) 95%,transparent);
+  opacity:.25;
+}
+/* margin annotations */
+.margin-note{
+  position:absolute;
+  left:0;
+  width:52px;
+  text-align:right;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--crimson);
+  opacity:.5;
+  letter-spacing:1px;
+}
+
+/* ─ VOL HEADER ─ */
+.vol-header{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:3px;
+  color:var(--dim);
+  margin-bottom:40px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  opacity:0;
+  animation:fadein .8s .2s forwards;
+}
+.vol-rule{flex:1;height:1px;background:var(--border);}
+.vol-rule.r{background:linear-gradient(90deg,var(--border),transparent);}
+.vol-rule.l{background:linear-gradient(270deg,var(--border),transparent);}
+
+/* ─ HERO ─ */
+.hero-body{
+  position:relative;
+  margin-bottom:56px;
+  min-height:200px;
+}
+.illum-cap{
+  float:left;
+  font-family:'Cinzel',serif;
+  font-size:5.2rem;
+  line-height:.85;
+  color:var(--gold);
+  margin-right:6px;
+  margin-bottom:4px;
+  text-shadow:0 0 40px rgba(200,168,75,.35),0 0 80px rgba(200,168,75,.1);
+  opacity:0;
+  transform:scale(.85);
+  transition:opacity .7s .5s,transform .7s .5s;
+}
+.illum-cap.visible{opacity:1;transform:scale(1);}
+
+.typed-line{
+  display:block;
+  min-height:1.6em;
+  font-size:1.15rem;
+  line-height:1.75;
+  letter-spacing:.3px;
+}
+.typed-line.ms{
+  font-family:'IM Fell English',serif;
+  color:var(--parch);
+  font-style:italic;
+}
+.typed-line.trm{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.95rem;
+  color:#b0a070;
+  letter-spacing:.5px;
+}
+.typed-line.gold{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.95rem;
+  color:var(--gold-e);
+  letter-spacing:1px;
+}
+.typed-line.dim{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.9rem;
+  color:var(--dim);
+  letter-spacing:1px;
+}
+.typed-line.gap{min-height:.9em;display:block;}
+.cursor{
+  display:inline-block;
+  width:9px;height:15px;
+  background:var(--gold-e);
+  vertical-align:text-bottom;
+  margin-left:1px;
+  animation:blink .75s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* ornament */
+.ornament{
+  clear:both;
+  text-align:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:4px;
+  color:var(--dim);
+  margin:48px 0 56px;
+  opacity:0;
+  transition:opacity .8s;
+}
+.ornament.visible{opacity:1;}
+
+/* ─ FOOTNOTES ─ */
+.footnotes{
+  margin-bottom:60px;
+  opacity:0;
+  transform:translateY(12px);
+  transition:opacity .8s,transform .8s;
+}
+.footnotes.visible{opacity:1;transform:none;}
+.fn-header{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:3px;
+  color:var(--dim);
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.fn-rule{flex:1;height:1px;background:var(--border);}
+.fn-item{
+  display:flex;
+  gap:20px;
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+  align-items:baseline;
+}
+.fn-num{
+  font-family:'Cinzel',serif;
+  font-size:11px;
+  color:var(--gold);
+  min-width:28px;
+  opacity:.7;
+  letter-spacing:1px;
+}
+.fn-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:2px;
+  color:var(--parch);
+  min-width:120px;
+}
+.fn-desc{
+  font-family:'IM Fell English',serif;
+  font-style:italic;
+  font-size:.95rem;
+  color:var(--dim);
+  line-height:1.5;
+}
+
+/* ─ CO-WRITING ─ */
+.cowrite{
+  margin-bottom:60px;
+  opacity:0;
+  transform:translateY(12px);
+  transition:opacity .8s,transform .8s;
+}
+.cowrite.visible{opacity:1;transform:none;}
+.cw-header{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:3px;
+  color:var(--dim);
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.cw-line{
+  display:grid;
+  grid-template-columns:70px 1fr;
+  gap:16px;
+  padding:8px 0;
+  border-left:2px solid transparent;
+  padding-left:12px;
+  transition:border-color .3s;
+}
+.cw-line:hover{border-left-color:var(--border);}
+.cw-who{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:2px;
+  padding-top:3px;
+}
+.cw-who.you{color:var(--crimson);opacity:.7;}
+.cw-who.story{color:var(--gold);opacity:.6;}
+.cw-text{
+  font-family:'IM Fell English',serif;
+  font-size:1rem;
+  line-height:1.7;
+  color:var(--parch);
+}
+.cw-line.ai .cw-text{
+  color:#a09070;
+  font-style:italic;
+}
+
+/* ─ CTA ─ */
+.cta-seal{
+  text-align:center;
+  padding:40px 0 20px;
+  opacity:0;
+  transition:opacity .8s;
+}
+.cta-seal.visible{opacity:1;}
+.seal-ornament{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:4px;
+  color:var(--dim);
+  margin-bottom:32px;
+}
+.seal-text{
+  font-family:'Cinzel',serif;
+  font-size:1.4rem;
+  font-weight:400;
+  color:var(--gold);
+  letter-spacing:6px;
+  text-transform:uppercase;
+  margin-bottom:28px;
+  text-shadow:0 0 40px rgba(200,168,75,.15);
+}
+.seal-btn{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  letter-spacing:4px;
+  color:var(--gold-e);
+  text-decoration:none;
+  border:1px solid var(--border);
+  padding:14px 40px;
+  position:relative;
+  overflow:hidden;
+  transition:border-color .4s,box-shadow .4s;
+}
+.seal-btn::before{
+  content:'';position:absolute;
+  top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(200,168,75,.08),transparent);
+  transition:left .5s;
+}
+.seal-btn:hover{border-color:var(--gold);box-shadow:0 0 40px rgba(200,168,75,.1);}
+.seal-btn:hover::before{left:100%;}
+
+/* ─ FOOTER ─ */
+footer{
+  position:relative;z-index:10;
+  text-align:center;
+  padding:20px;
+  border-top:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  letter-spacing:2px;
+  color:var(--dim);
+}
+footer a{color:var(--dim);text-decoration:none;}
+footer a:hover{color:var(--parch);}
+
+@keyframes fadein{to{opacity:1;}}
+</style>
 </head>
 <body>
-    <div class="hex-background">
-        <div class="hex-pattern"></div>
+
+<div class="hex-background"><div class="hex-pattern"></div></div>
+
+<header class="header">
+  <div>
+    <div class="logo">blendStory</div>
+    <div class="logo-sub">the collaborative codex</div>
+  </div>
+  <div class="header-rule"></div>
+  <a href="login/" class="enter-btn">[ enter ]</a>
+</header>
+
+<div class="scroll-wrap">
+<div class="manuscript">
+
+  <span class="margin-note" style="top:62px">§ I</span>
+
+  <!-- VOL HEADER -->
+  <div class="vol-header">
+    <span class="vol-rule l"></span>
+    <span>Vol. I</span>
+    <span style="color:var(--border)">·</span>
+    <span>The Collaborative Codex</span>
+    <span style="color:var(--border)">·</span>
+    <span>MMXXV</span>
+    <span class="vol-rule r"></span>
+  </div>
+
+  <!-- HERO — typed manuscript -->
+  <div class="hero-body">
+    <span class="illum-cap" id="illumS">S</span>
+    <div id="typedLines"></div>
+  </div>
+
+  <!-- ornament divider -->
+  <div class="ornament" id="ornament">── ✦ ──── ☥ ──── ✦ ──</div>
+
+  <!-- FOOTNOTES -->
+  <div class="footnotes" id="footnotes">
+    <div class="fn-header">
+      <span class="fn-rule"></span>
+      <span>annotations</span>
+      <span class="fn-rule"></span>
     </div>
-    
-    <header class="header">
-        <div>
-            <h1>blendStory</h1>
-            <p class="tagline">your AI co-writing partner</p>
-        </div>
-    </header>
-    
-    <div class="content-area">
-        <section class="hero-section">
-            <p class="hero-text">
-                stories don't write themselves. but they can write with you.
-                your co-author never sleeps. never judges. always ready.
-                break through blocks. explore ideas. finish what you started.
-            </p>
-        </section>
-        
-        <div class="features-grid">
-            <div class="feature">
-                <div class="feature-icon">◆</div>
-                <h3 class="feature-title">collaborate</h3>
-                <p class="feature-desc">
-                    write alongside an entity that understands narrative structure.
-                    suggest plot turns. develop characters. maintain consistency.
-                </p>
-            </div>
-            
-            <div class="feature">
-                <div class="feature-icon">▲</div>
-                <h3 class="feature-title">accelerate</h3>
-                <p class="feature-desc">
-                    outline to first draft in hours, not weeks.
-                    iterate on scenes. explore alternatives. keep momentum.
-                </p>
-            </div>
-            
-            <div class="feature">
-                <div class="feature-icon">●</div>
-                <h3 class="feature-title">expand</h3>
-                <p class="feature-desc">
-                    generate alternate endings. branch storylines.
-                    test different character voices. see what works.
-                </p>
-            </div>
-        </div>
-        
-        <section class="writing-showcase">
-            <h2>your writing modes</h2>
-            <p style="text-align: center; color: #8a7a5a; margin-bottom: 2rem;">
-                choose how you want to work together
-            </p>
-            
-            <div class="writing-modes">
-                <div class="writing-mode">
-                    <div class="mode-name">outline</div>
-                    <p class="mode-desc">structure your story beats</p>
-                </div>
-                
-                <div class="writing-mode">
-                    <div class="mode-name">draft</div>
-                    <p class="mode-desc">rapid first-pass writing</p>
-                </div>
-                
-                <div class="writing-mode">
-                    <div class="mode-name">refine</div>
-                    <p class="mode-desc">polish existing scenes</p>
-                </div>
-                
-                <div class="writing-mode">
-                    <div class="mode-name">brainstorm</div>
-                    <p class="mode-desc">explore new directions</p>
-                </div>
-            </div>
-        </section>
-        
-        <section class="sample-preview">
-            <h3>collaborative writing</h3>
-            <div class="sample-text">
-                → you write the vision<br>
-                → AI helps execute<br>
-                → you maintain creative control<br>
-            </div>
-            <p style="color: #8a7a5a; font-size: 0.9rem; margin-top: 1rem;">
-                not replacing writers. empowering them.<br>
-                the tool that helps you finish your novel.
-            </p>
-        </section>
-        
-        <section class="cta-section">
-            <p class="cta-text">ready to write together?</p>
-            <a href="#" class="cta-button">start co-writing</a>
-        </section>
+    <div class="fn-item">
+      <span class="fn-num">I.</span>
+      <span class="fn-title">collaborate</span>
+      <span class="fn-desc">narrative structure · character arcs · plot turns · thematic consistency across the length of a work</span>
     </div>
-    
-    <footer>
-        <p class="powered">powered by <a href="https://lempyra.com">Lempyrλ</a></p>
-    </footer>
-    
-    <script>
-        function generateHexPattern() {
-            const container = document.querySelector('.hex-pattern');
-            container.innerHTML = '';
-            
-            const hexWidth = 40;
-            const hexHeight = 46;
-            const cols = Math.ceil(window.innerWidth / (hexWidth * 0.75)) + 2;
-            const rows = Math.ceil(window.innerHeight / hexHeight) + 2;
-            
-            for (let row = 0; row < rows; row++) {
-                for (let col = 0; col < cols; col++) {
-                    const hex = document.createElement('div');
-                    hex.className = 'hex';
-                    hex.dataset.col = col;
-                    hex.dataset.row = row;
-                    
-                    const offsetX = col * hexWidth * 0.75;
-                    const offsetY = row * hexHeight + (col % 2) * (hexHeight / 2);
-                    
-                    hex.style.left = offsetX + 'px';
-                    hex.style.top = offsetY + 'px';
-                    
-                    hex.innerHTML = `
-                        <svg viewBox="0 0 40 46">
-                            <polygon points="20,1 38,12 38,34 20,45 2,34 2,12" />
-                        </svg>
-                    `;
-                    
-                    container.appendChild(hex);
-                }
-            }
-            
-            startWavePulse();
-        }
-        
-        function startWavePulse() {
-            const hexes = document.querySelectorAll('.hex');
-            const themeColor = '#ffcc33';
-            const baseColor = '#4a3a1a';
-            
-            function createWave(startCol, startRow) {
-                hexes.forEach(hex => {
-                    const col = parseInt(hex.dataset.col);
-                    const row = parseInt(hex.dataset.row);
-                    
-                    const distance = Math.sqrt(
-                        Math.pow(col - startCol, 2) + 
-                        Math.pow(row - startRow, 2)
-                    );
-                    
-                    setTimeout(() => {
-                        const polygon = hex.querySelector('polygon');
-                        polygon.style.transition = 'all 0.3s ease-out';
-                        polygon.setAttribute('stroke', themeColor);
-                        polygon.setAttribute('stroke-width', '3');
-                        polygon.setAttribute('fill', themeColor);
-                        polygon.setAttribute('fill-opacity', '0.3');
-                        hex.style.transform = 'scale(1.1)';
-                        hex.style.opacity = '1';
-                        
-                        setTimeout(() => {
-                            polygon.style.transition = 'all 0.5s ease-in';
-                            polygon.setAttribute('stroke', baseColor);
-                            polygon.setAttribute('stroke-width', '1.5');
-                            polygon.setAttribute('fill', 'none');
-                            polygon.setAttribute('fill-opacity', '0');
-                            hex.style.transform = 'scale(1)';
-                            hex.style.opacity = '0.5';
-                        }, 600);
-                    }, distance * 50);
-                });
-            }
-            
-            document.addEventListener('click', (e) => {
-                const hexWidth = 40;
-                const hexHeight = 46;
-                const clickCol = Math.floor(e.clientX / (hexWidth * 0.75));
-                const clickRow = Math.floor(e.clientY / hexHeight);
-                
-                const colors = ['#ffcc33', '#ffdd55', '#eebb22', '#ccaa00'];
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                
-                hexes.forEach(hex => {
-                    const col = parseInt(hex.dataset.col);
-                    const row = parseInt(hex.dataset.row);
-                    
-                    const distance = Math.sqrt(
-                        Math.pow(col - clickCol, 2) + 
-                        Math.pow(row - clickRow, 2)
-                    );
-                    
-                    setTimeout(() => {
-                        const polygon = hex.querySelector('polygon');
-                        polygon.style.transition = 'all 0.3s ease-out';
-                        polygon.setAttribute('stroke', randomColor);
-                        polygon.setAttribute('stroke-width', '3.5');
-                        polygon.setAttribute('fill', randomColor);
-                        polygon.setAttribute('fill-opacity', '0.4');
-                        hex.style.transform = 'scale(1.15)';
-                        hex.style.opacity = '1';
-                        
-                        setTimeout(() => {
-                            polygon.style.transition = 'all 0.5s ease-in';
-                            polygon.setAttribute('stroke', baseColor);
-                            polygon.setAttribute('stroke-width', '1.5');
-                            polygon.setAttribute('fill', 'none');
-                            polygon.setAttribute('fill-opacity', '0');
-                            hex.style.transform = 'scale(1)';
-                            hex.style.opacity = '0.5';
-                        }, 600);
-                    }, distance * 50);
-                });
-            });
-            
-            function scheduleNextWave() {
-                const interval = 3000 + Math.random() * 4000;
-                setTimeout(() => {
-                    const startCol = Math.floor(Math.random() * 20);
-                    const startRow = Math.floor(Math.random() * 15);
-                    createWave(startCol, startRow);
-                    scheduleNextWave();
-                }, interval);
-            }
-            
-            scheduleNextWave();
-            const startCol = Math.floor(Math.random() * 20);
-            const startRow = Math.floor(Math.random() * 15);
-            createWave(startCol, startRow);
-        }
-        
-        window.addEventListener('load', generateHexPattern);
-        window.addEventListener('resize', generateHexPattern);
-    </script>
+    <div class="fn-item">
+      <span class="fn-num">II.</span>
+      <span class="fn-title">accelerate</span>
+      <span class="fn-desc">outline to first draft · scene iteration · unblocking · the work moves when you move with it</span>
+    </div>
+    <div class="fn-item" style="border-bottom:none">
+      <span class="fn-num">III.</span>
+      <span class="fn-title">expand</span>
+      <span class="fn-desc">alternate endings · branching timelines · voice testing · the story has more rooms than you entered</span>
+    </div>
+  </div>
+
+  <span class="margin-note" style="top:620px">✦</span>
+
+  <!-- CO-WRITING -->
+  <div class="cowrite" id="cowrite">
+    <div class="cw-header">
+      <span class="fn-rule"></span>
+      <span>a passage, co-written</span>
+      <span class="fn-rule"></span>
+    </div>
+    <div class="cw-line">
+      <span class="cw-who you">you :</span>
+      <span class="cw-text">she reached for the door —</span>
+    </div>
+    <div class="cw-line ai">
+      <span class="cw-who story">story :</span>
+      <span class="cw-text">— knowing it had been waiting since before the house was built.</span>
+    </div>
+    <div class="cw-line">
+      <span class="cw-who you">you :</span>
+      <span class="cw-text">the hallway smelled of old paper and something alive.</span>
+    </div>
+    <div class="cw-line ai">
+      <span class="cw-who story">story :</span>
+      <span class="cw-text">the smell of a story breathing in the dark, patient as a pharaoh's seal.</span>
+    </div>
+    <div class="cw-line">
+      <span class="cw-who you">you :</span>
+      <span class="cw-text">I did not choose to be here.</span>
+    </div>
+    <div class="cw-line ai">
+      <span class="cw-who story">story :</span>
+      <span class="cw-text">the manuscript disagrees. your name was written in its margin before your birth.</span>
+    </div>
+  </div>
+
+  <span class="margin-note" style="top:870px">☥</span>
+
+  <!-- CTA -->
+  <div class="cta-seal" id="ctaSeal">
+    <div class="seal-ornament">── ✦ ────────── ☥ ────────── ✦ ──</div>
+    <div class="seal-text">open the codex</div>
+    <a href="login/" class="seal-btn">[ enter the manuscript ]</a>
+  </div>
+
+</div>
+</div>
+
+<footer>
+  powered by <a href="https://lempyra.com">Lempyrλ</a> &nbsp;·&nbsp; blendStory.xyz
+</footer>
+
+<script>
+// ─ TYPING SEQUENCE ─
+var LINES = [
+  {text:'tories do not arrive complete.',      speed:34, cls:'ms',   delay:0},
+  {text:'They surface\u2014fragmented, luminous\u2014', speed:28, cls:'ms',   delay:180},
+  {text:'in the margins between sleep and waking.', speed:28, cls:'ms', delay:100},
+  {text:'', cls:'gap', delay:700},
+  {text:'blendStory is the intelligence',      speed:36, cls:'trm',  delay:0},
+  {text:'that writes alongside yours.',        speed:32, cls:'trm',  delay:150},
+  {text:'not before. not after.',              speed:30, cls:'trm',  delay:80},
+  {text:'together.\u2003in the same ink.',     speed:40, cls:'gold', delay:500},
+  {text:'', cls:'gap', delay:1000},
+  {text:'\u2234\u2003your co-author awaits.', speed:48, cls:'dim',  delay:0, last:true}
+];
+
+var lineIdx=0;
+var cursorEl=document.createElement('span');
+cursorEl.className='cursor';
+
+function startTyping(){
+  var S=document.getElementById('illumS');
+  S.classList.add('visible');
+  setTimeout(runLine, 600);
+}
+
+function runLine(){
+  if(lineIdx>=LINES.length) return;
+  var L=LINES[lineIdx++];
+  if(L.cls==='gap'){
+    setTimeout(runLine, L.delay);
+    return;
+  }
+  var container=document.getElementById('typedLines');
+  var div=document.createElement('div');
+  div.className='typed-line '+L.cls;
+  container.appendChild(div);
+  div.appendChild(cursorEl);
+  var chars=Array.from(L.text);
+  var i=0;
+  function tick(){
+    if(i<chars.length){
+      div.insertBefore(document.createTextNode(chars[i++]),cursorEl);
+      setTimeout(tick, L.speed+(Math.random()*14));
+    } else {
+      if(L.last){
+        // leave cursor
+        revealAfterTyping();
+      } else {
+        div.removeChild(cursorEl);
+        setTimeout(runLine, L.delay||180);
+      }
+    }
+  }
+  tick();
+}
+
+function revealAfterTyping(){
+  var ornament=document.getElementById('ornament');
+  var footnotes=document.getElementById('footnotes');
+  var cowrite=document.getElementById('cowrite');
+  var cta=document.getElementById('ctaSeal');
+  setTimeout(function(){ornament.classList.add('visible');},200);
+  setTimeout(function(){footnotes.classList.add('visible');},600);
+  setTimeout(function(){cowrite.classList.add('visible');},1100);
+  setTimeout(function(){cta.classList.add('visible');},1600);
+}
+
+window.addEventListener('load', function(){
+  generateHexPattern();
+  setTimeout(startTyping, 300);
+});
+window.addEventListener('resize', generateHexPattern);
+
+// ─ HEX PATTERN (preserved + amber-toned) ─
+function generateHexPattern(){
+  var container=document.querySelector('.hex-pattern');
+  container.innerHTML='';
+  var hexWidth=40,hexHeight=46;
+  var cols=Math.ceil(window.innerWidth/(hexWidth*.75))+2;
+  var rows=Math.ceil(window.innerHeight/hexHeight)+2;
+  for(var row=0;row<rows;row++){
+    for(var col=0;col<cols;col++){
+      var hex=document.createElement('div');
+      hex.className='hex';
+      hex.dataset.col=col;hex.dataset.row=row;
+      hex.style.left=(col*hexWidth*.75)+'px';
+      hex.style.top=(row*hexHeight+(col%2)*(hexHeight/2))+'px';
+      hex.innerHTML='<svg viewBox="0 0 40 46"><polygon points="20,1 38,12 38,34 20,45 2,34 2,12"/></svg>';
+      container.appendChild(hex);
+    }
+  }
+  startHexPulse();
+}
+
+function startHexPulse(){
+  var hexes=document.querySelectorAll('.hex');
+  var base='#2e2208';
+  function wave(sc,sr,color){
+    hexes.forEach(function(h){
+      var c=parseInt(h.dataset.col),r=parseInt(h.dataset.row);
+      var d=Math.sqrt(Math.pow(c-sc,2)+Math.pow(r-sr,2));
+      setTimeout(function(){
+        var p=h.querySelector('polygon');
+        p.style.transition='all .25s ease-out';
+        p.setAttribute('stroke',color||'#c8a84b');
+        p.setAttribute('stroke-width','2');
+        p.setAttribute('fill',color||'#c8a84b');
+        p.setAttribute('fill-opacity','.12');
+        h.style.transform='scale(1.08)';
+        setTimeout(function(){
+          p.style.transition='all .5s ease-in';
+          p.setAttribute('stroke',base);
+          p.setAttribute('stroke-width','1');
+          p.setAttribute('fill','none');
+          p.setAttribute('fill-opacity','0');
+          h.style.transform='scale(1)';
+        },500);
+      },d*45);
+    });
+  }
+  document.addEventListener('click',function(e){
+    var sc=Math.floor(e.clientX/(40*.75)),sr=Math.floor(e.clientY/46);
+    var colors=['#c8a84b','#ffcc33','#7a1515','#3a6b5a'];
+    wave(sc,sr,colors[Math.floor(Math.random()*colors.length)]);
+  });
+  function autoWave(){
+    wave(Math.floor(Math.random()*20),Math.floor(Math.random()*15),'#c8a84b');
+    setTimeout(autoWave,3500+Math.random()*4000);
+  }
+  autoWave();
+}
+</script>
 </body>
 </html>
