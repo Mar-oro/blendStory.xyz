@@ -286,6 +286,28 @@ textarea.m-input{
   display:flex;gap:8px;
 }
 .m-gen-prompt{flex:1;}
+.m-gen-model{
+  display:flex;gap:8px;align-items:center;margin-bottom:8px;
+}
+.m-gen-select{
+  flex:1;font-size:11px;padding:6px 8px;background:var(--bg);
+  border:1px solid var(--border);color:var(--bright);font-family:inherit;
+}
+.m-gen-select:focus{outline:1px solid var(--gold);}
+.m-gen-reload{
+  background:transparent;border:1px solid var(--border);color:var(--gold);
+  width:28px;height:28px;cursor:pointer;font-size:14px;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:transform .2s,color .2s,border-color .2s;
+}
+.m-gen-reload:hover{color:var(--bright);border-color:var(--gold);}
+.m-gen-reload.spinning{transform:rotate(360deg);}
+.m-gen-note{font-size:9px;color:var(--dim);margin-left:8px;letter-spacing:1px;text-transform:none;}
+.m-use-btn{
+  background:transparent;border:1px solid var(--gold);color:var(--gold);
+  font-family:inherit;font-size:10px;letter-spacing:2px;padding:5px 10px;cursor:pointer;
+}
+.m-use-btn:hover{background:var(--gold);color:var(--bg);}
 .m-gen-btn{
   background:transparent;
   border:1px solid var(--gold);
@@ -431,7 +453,12 @@ textarea.m-input{
       <textarea class="m-input" id="m-content" placeholder="write here..."></textarea>
     </div>
     <div id="m-gen-section">
-      <div class="m-label">GENERATE  ·  Lempyrλ</div>
+      <div class="m-label">GENERATE  ·  Lempyrλ <span class="m-gen-note" id="m-gen-note"></span></div>
+      <div class="m-gen-model">
+        <select class="m-input m-gen-select" id="m-model"><option>loading…</option></select>
+        <button class="m-gen-reload" id="m-model-reload" title="reload models">↻</button>
+        <button class="m-use-btn" id="m-use-btn" style="display:none" onclick="useGenerated()">USE ↓</button>
+      </div>
       <div class="m-gen-row">
         <input class="m-input m-gen-prompt" id="m-prompt" type="text" placeholder="describe what to generate...">
         <button class="m-gen-btn" id="m-gen-btn" onclick="doGenerate()">▶ RUN</button>
@@ -461,6 +488,7 @@ textarea.m-input{
 </div>
 </div>
 
+<script src="../blendstory-client.js"></script>
 <script>
 // ─ AUTH ─
 var TOKEN_KEY='blendstory_token', USER_KEY='blendstory_user';
@@ -629,10 +657,32 @@ function render(){
     ws.appendChild(el);
     if(card.type==='image'){
       var cv=document.getElementById('cv-'+card.id);
-      if(cv) setTimeout(function(){drawCanvas(cv,'image');},10);
+      if(cv){
+        if(card.imgId){
+          hydrateBlobToCanvas(cv, card.imgId);
+        } else {
+          setTimeout(function(){drawCanvas(cv,'image');},10);
+        }
+      }
     }
   });
   updateCounts();
+}
+
+// ─ Hydrate a saved blob (by imgId) onto a card canvas ─
+async function hydrateBlobToCanvas(cv, imgId){
+  try{
+    var rec = await client.stores().imgStore.get(imgId);
+    if(!rec || !rec.blob) { drawCanvas(cv,'image'); return; }
+    var bmp = await createImageBitmap(rec.blob);
+    var ctx = cv.getContext('2d');
+    cv.width = cv.offsetWidth || 400;
+    cv.height = cv.offsetHeight || 160;
+    var r = Math.min(cv.width/bmp.width, cv.height/bmp.height);
+    var w = bmp.width*r, h = bmp.height*r;
+    ctx.fillStyle='#000'; ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.drawImage(bmp,(cv.width-w)/2,(cv.height-h)/2,w,h);
+  }catch(_){ drawCanvas(cv,'image'); }
 }
 
 // ─ FILTER ─
@@ -678,6 +728,7 @@ function openNew(type){
   document.getElementById('overlay').dataset.type=type;
   document.getElementById('overlay').classList.add('open');
   document.getElementById('m-title').focus();
+  ensureModelsLoaded();
 }
 function openHelp(){
   document.getElementById('m-header-title').textContent='help';
@@ -708,22 +759,46 @@ function editCard(id){
   document.getElementById('overlay').dataset.type=card.type;
   document.getElementById('overlay').classList.add('open');
   document.getElementById('m-title').focus();
+  ensureModelsLoaded();
+}
+function ensureModelsLoaded(){
+  // Load once on first modal open; fill on every open so the selector
+  // matches the current node type (chat vs img models).
+  fillModelSelect();
+  if(!modelsByKind.chat.length && !modelsByKind.img.length){
+    loadModels();
+  }
 }
 function closeModal(){
   document.getElementById('overlay').classList.remove('open');
   editingId=null;
 }
-function saveModal(){
+async function saveModal(){
   var title=document.getElementById('m-title').value.trim()||'untitled';
   var content=document.getElementById('m-content').value;
   var type=document.getElementById('overlay').dataset.type||'text';
+  var card;
   if(editingId){
-    var card=findCard(editingId);
+    card=findCard(editingId);
     if(card){card.title=title;card.content=content;}
   } else {
     var id=BS.nextId++;
-    var card={id:id,type:type,title:title,content:content,created:Date.now()};
+    card={id:id,type:type,title:title,content:content,created:Date.now()};
     BS.boards[type].push(card);
+  }
+  // Persist generated image blob (if staged).
+  if(type==='image' && lastGen.blob && card){
+    try{
+      var imgId = 'img_' + card.id + '_' + Date.now();
+      await client.stores().imgStore.put({
+        id: imgId, ts: Date.now(),
+        prompt: lastGen.prompt || content,
+        blob: lastGen.blob
+      });
+      card.imgId = imgId;
+      card.content = lastGen.prompt || content;  // prompt becomes the "content" field
+      lastGen.blob = null;
+    } catch(e){ setCmdMsg('image save failed: '+(e.message||e)); }
   }
   BS.save();render();closeModal();
 }
@@ -731,60 +806,156 @@ function deleteEditing(){
   if(editingId){delCard(editingId);closeModal();}
 }
 
-// ─ GENERATE (mocked — swap fetch when backend live) ─
-var MOCK_TEXT=[
-  'The amber light flickered once, twice, then settled into its slow pulse rhythm. She had been waiting three hours. The city did not notice.',
-  'In the space between thoughts, a frequency — low, persistent, like the hum of servers processing grief.',
-  'Every story begins before you notice it beginning. This one started six years ago, in a server room that smelled of ozone and cold coffee.',
-  'He wrote the same sentence forty times. On the forty-first attempt, something changed in the light.'
-];
-function doGenerate(){
-  var prompt=document.getElementById('m-prompt').value.trim();
-  if(!prompt)return;
-  var type=document.getElementById('overlay').dataset.type;
-  var btn=document.getElementById('m-gen-btn');
-  btn.disabled=true;btn.textContent='▶ ...';
-  var out=document.getElementById('m-gen-out');
-  var cv=document.getElementById('m-gen-canvas');
-  out.style.display='none';cv.style.display='none';
+// ─ LEMPYRΛ CLIENT ─────────────────────────────────────────────────
+var client = new BlendStoryClient();
+var lastGen = { text:'', blob:null, prompt:'' };  // staging for "USE ↓"
+var modelsByKind = { chat:[], img:[] };
 
-  // TODO: replace with real API call when backend ready:
-  // fetch(API.base + API[type], {method:'POST',
-  //   headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
-  //   body:JSON.stringify({prompt:prompt})
-  // }).then(r=>r.json()).then(d=>{ ... })
-
-  setTimeout(function(){
-    btn.disabled=false;btn.textContent='▶ RUN';
-    if(type==='image'){
-      cv.style.display='block';
-      setTimeout(function(){drawCanvas(cv,'image');},10);
-    } else if(type==='audio'){
-      out.style.display='block';
-      out.textContent='';
-      var wave=randomWaveShort()+'\n'+randomWaveShort();
-      typeOut(out,wave,15);
-    } else {
-      out.style.display='block';
-      out.textContent='';
-      var mock=MOCK_TEXT[Math.floor(Math.random()*MOCK_TEXT.length)];
-      typeOut(out,mock,18);
-    }
-  },800+Math.random()*400);
+function kindOf(type){
+  if(type==='image') return 'img';
+  if(type==='text' || type==='float') return 'chat';
+  return null;  // audio — no backend yet
 }
+
+async function loadModels(){
+  var rel = document.getElementById('m-model-reload');
+  rel.classList.add('spinning');
+  try{
+    var pair = await Promise.all([
+      client.chatModels().catch(function(){return [];}),
+      client.imageModels().catch(function(){return [];})
+    ]);
+    modelsByKind.chat = pair[0] || [];
+    modelsByKind.img  = pair[1] || [];
+    fillModelSelect();
+  } finally {
+    setTimeout(function(){ rel.classList.remove('spinning'); }, 250);
+  }
+}
+function fillModelSelect(){
+  var type = document.getElementById('overlay').dataset.type || 'text';
+  var kind = kindOf(type);
+  var sel  = document.getElementById('m-model');
+  var note = document.getElementById('m-gen-note');
+  if(!kind){
+    sel.innerHTML = '<option value="">(audio — backend pending)</option>';
+    note.textContent = '· audio not wired';
+    return;
+  }
+  var list = modelsByKind[kind];
+  sel.innerHTML = '';
+  if(!list.length){
+    sel.innerHTML = '<option value="">no models</option>';
+    note.textContent = '· try ↻ reload';
+    return;
+  }
+  list.forEach(function(m){
+    var o = document.createElement('option');
+    o.value = m.id || m.name || m;
+    o.textContent = m.label || m.id || m.name || m;
+    sel.appendChild(o);
+  });
+  var pref = sessionStorage.getItem('blendstory_pref_' + kind);
+  if(pref) sel.value = pref;
+  sel.onchange = function(){ sessionStorage.setItem('blendstory_pref_' + kind, sel.value); };
+  note.textContent = kind === 'chat' ? '· streaming chat' : '· sdxl-style';
+}
+document.getElementById('m-model-reload').addEventListener('click', loadModels);
+
+// ─ SYSTEM PROMPTS per node-type ─
+var SYSTEM_PROMPTS = {
+  text:  "You are a co-writer for blendStory. Continue or expand the user's prompt as prose. Match their tone. Keep it tight; no preamble; no meta-comments.",
+  float: "You are a one-shot writer for short floating notes. Output a single fragment under 60 words. Evocative, atmospheric, no preamble."
+};
+
+// ─ GENERATE (real backend via sar1a) ────────────────────────────────
+async function doGenerate(){
+  var prompt = document.getElementById('m-prompt').value.trim();
+  if(!prompt) return;
+  var type = document.getElementById('overlay').dataset.type;
+  var btn  = document.getElementById('m-gen-btn');
+  var out  = document.getElementById('m-gen-out');
+  var cv   = document.getElementById('m-gen-canvas');
+  var useBtn = document.getElementById('m-use-btn');
+  var model = document.getElementById('m-model').value;
+
+  out.style.display='none'; cv.style.display='none'; useBtn.style.display='none';
+  lastGen = { text:'', blob:null, prompt: prompt };
+
+  if(type === 'audio'){
+    out.style.display='block';
+    out.textContent = '[ audio generation not yet wired to backend — placeholder waveform ]\n' +
+                      randomWave();
+    return;
+  }
+  if(!model){ out.style.display='block'; out.textContent='no model selected — try ↻'; return; }
+
+  btn.disabled = true; btn.textContent = '▶ ...';
+
+  try{
+    if(type === 'image'){
+      // submit + poll + fetch
+      var result = await client.generateAndFetch({
+        model: model, prompt: prompt, steps: 30, seed: -1
+      });
+      var blob = result && result.blobs && result.blobs[0] && result.blobs[0].blob;
+      if(!blob) throw new Error('no image returned');
+      lastGen.blob = blob;
+      cv.style.display = 'block';
+      var bmp = await createImageBitmap(blob);
+      var ctx = cv.getContext('2d');
+      cv.width = cv.offsetWidth || 400;
+      cv.height = cv.offsetHeight || 160;
+      // contain-fit
+      var r = Math.min(cv.width / bmp.width, cv.height / bmp.height);
+      var w = bmp.width * r, h = bmp.height * r;
+      ctx.fillStyle = '#000'; ctx.fillRect(0,0,cv.width,cv.height);
+      ctx.drawImage(bmp, (cv.width-w)/2, (cv.height-h)/2, w, h);
+      useBtn.textContent = 'USE ↓'; useBtn.style.display = '';
+    } else {
+      // text / float — streaming chat
+      out.style.display = 'block';
+      out.textContent = '';
+      var sys = SYSTEM_PROMPTS[type] || SYSTEM_PROMPTS.text;
+      var existing = document.getElementById('m-content').value.trim();
+      var messages = [{ role:'system', content: sys }];
+      if(existing) messages.push({ role:'user', content: 'Existing draft:\n' + existing });
+      messages.push({ role:'user', content: prompt });
+      var acc = '';
+      await client.chat({
+        model: model, messages: messages,
+        onDelta: function(chunk){ acc += chunk; out.textContent = acc; }
+      });
+      lastGen.text = acc;
+      useBtn.textContent = 'USE ↓'; useBtn.style.display = '';
+    }
+  } catch(e){
+    out.style.display = 'block';
+    out.textContent = '[error] ' + (e.message || e);
+  } finally {
+    btn.disabled = false; btn.textContent = '▶ RUN';
+  }
+}
+
+// Pull generated content into the editable fields.
+function useGenerated(){
+  var type = document.getElementById('overlay').dataset.type;
+  if(type === 'image'){
+    // staging the blob — saveModal() persists it.
+    setCmdMsg('image staged · click save to keep');
+  } else if(lastGen.text){
+    var el = document.getElementById('m-content');
+    el.value = (el.value.trim() ? el.value.trim() + '\n\n' : '') + lastGen.text;
+    setCmdMsg('text appended to draft');
+  }
+}
+
 function quickGen(id){
   editCard(id);
   setTimeout(function(){
     document.getElementById('m-prompt').value='continue this story...';
     doGenerate();
   },100);
-}
-function typeOut(el,text,speed){
-  var i=0;
-  var t=setInterval(function(){
-    el.textContent+=text[i++];
-    if(i>=text.length)clearInterval(t);
-  },speed);
 }
 
 // ─ COMMAND BAR ─

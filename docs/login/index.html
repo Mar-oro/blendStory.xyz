@@ -87,7 +87,7 @@ input[type=text],input[type=password]{
   font-family:'JetBrains Mono',monospace;
   font-size:14px;
   padding:10px 12px;
-  outline:none;
+  
   letter-spacing:1px;
   transition:border-color .2s,box-shadow .2s;
 }
@@ -155,15 +155,17 @@ input:focus{
     <div class="t-line">
       <span>Lempyrλ Auth</span> · sar1a.lempyra.com · TLS 1.3
     </div>
+    <form id="login-form" onsubmit="doLogin(); return false;">
     <div class="field-group">
-      <label class="field-label"><span class="prompt">login:</span> username</label>
-      <input type="text" id="u" autocomplete="username" autofocus placeholder="_">
+      <label class="field-label" for="u"><span class="prompt">login:</span> username</label>
+      <input type="text" id="u" name="username" autocomplete="off" autofocus placeholder="_">
     </div>
     <div class="field-group">
-      <label class="field-label"><span class="prompt">pass:</span> password</label>
-      <input type="password" id="p" autocomplete="current-password" placeholder="_">
+      <label class="field-label" for="p"><span class="prompt">pass:</span> password</label>
+      <input type="password" id="p" name="password" autocomplete="off" placeholder="_">
     </div>
-    <button class="btn" id="btn" onclick="doLogin()">[ authenticate ]</button>
+    <button type="submit" class="btn" id="btn">[ authenticate ]</button>
+    </form>
     <div class="status-line" id="status">&nbsp;</div>
     <a href="../" class="back">← back to blendstory</a>
   </div>
@@ -212,7 +214,7 @@ async function doLogin(){
     var r2=await fetch(AUTH.url+'/auth/token',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({grant_type:'authorization_code',code:code,client_id:AUTH.clientId,client_secret:p})
+      body:JSON.stringify({grant_type:'authorization_code',code:code,client_id:AUTH.clientId})
     });
     var d2=await r2.json();
     if(!r2.ok) throw new Error(d2.detail||'token exchange failed');
