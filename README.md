@@ -1,5 +1,5 @@
 # blendStory.xyz - Interactive Effects Guide
-
+WTF.
 ## Project Overview
 **blendStory**: AI co-writing partner for authors and storytellers
 
