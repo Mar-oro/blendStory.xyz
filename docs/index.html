@@ -3,619 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>blendStory — the collaborative codex</title>
+<title>blendStory · THE_FORGE</title>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@300;400&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=JetBrains+Mono:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#090705;
-  --gold:#c8a84b;
-  --gold-e:#ffcc33;
-  --crimson:#7a1515;
-  --verd:#3a6b5a;
-  --parch:#d4c49a;
-  --dim:#6a5836;
-  --faint:#2a1e0a;
-  --border:#2e2208;
+  --bg: #080a0c; --bg2: #0c0e12; --bg3: #12161a;
+  --amber: #ffb000; --amber-dim: #996a00; --amber-deep: #442a00;
+  --fg: #d0d8e0; --dim: #3a4a5a; --border: #1a1e24;
 }
-html{scroll-behavior:smooth;}
+*{margin:0;padding:0;box-sizing:border-box}
 body{
-  font-family:'IM Fell English',serif;
-  background:var(--bg);
-  color:var(--parch);
-  min-height:100vh;
+  font-family:'JetBrains Mono',monospace;
+  background:var(--bg);color:var(--fg);
+  min-height:100vh;display:flex;flex-direction:column;
   overflow-x:hidden;
 }
-/* scanlines */
 body::after{
   content:'';position:fixed;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.05) 3px,rgba(0,0,0,.05) 4px);
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,176,0,0.02) 3px,rgba(255,176,0,0.02) 4px);
   pointer-events:none;z-index:9000;
 }
-/* hex background */
-.hex-background{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden;opacity:.35;}
-.hex-pattern{position:absolute;width:100%;height:100%;}
-.hex{position:absolute;width:40px;height:46px;transition:all .3s ease;}
-.hex svg{width:100%;height:100%;overflow:visible;}
-.hex polygon{stroke:#2e2208;fill:none;stroke-width:1;}
 
-/* ─ HEADER ─ */
+/* GRID BG */
+.forge-grid{
+  position:fixed;inset:0;
+  background-image: 
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 1; opacity: 0.3;
+}
+
+/* HEADER */
 .header{
+  padding:32px 60px;display:flex;align-items:center;justify-content:space-between;
   position:relative;z-index:10;
-  padding:24px 48px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid var(--border);
 }
-.header-rule{
-  position:absolute;bottom:0;left:0;right:0;
-  height:1px;background:linear-gradient(90deg,transparent,var(--gold),var(--crimson),var(--gold),transparent);
-  opacity:.3;
+.brand{
+  font-family:'Cinzel',serif;font-size:24px;letter-spacing:6px;color:var(--amber);
+  text-decoration:none;text-shadow:0 0 20px rgba(255,176,0,0.4);
 }
-.logo{
-  font-family:'Cinzel',serif;
-  font-size:22px;
-  font-weight:400;
-  color:var(--gold);
-  letter-spacing:4px;
-  text-shadow:0 0 40px rgba(200,168,75,.2);
+.brand .sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:3px;margin-left:16px;text-transform:uppercase;}
+
+/* HERO */
+.hero{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 40px;position:relative;z-index:10;text-align:center;
 }
-.logo-sub{
-  font-family:'JetBrains Mono',monospace;
-  font-size:9px;
-  letter-spacing:3px;
-  color:var(--dim);
-  text-transform:uppercase;
-  margin-top:3px;
+.forge-icon{
+  width:120px;height:120px;border:1px solid var(--amber-deep);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:48px;position:relative;
 }
-.enter-btn{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  letter-spacing:3px;
-  color:var(--gold);
-  text-decoration:none;
-  border:1px solid var(--border);
-  padding:9px 20px;
-  transition:border-color .3s,box-shadow .3s,background .3s;
+.forge-icon::before{
+  content:'';position:absolute;inset:-10px;border:1px solid var(--border);
 }
-.enter-btn:hover{
-  border-color:var(--gold);
-  box-shadow:0 0 20px rgba(200,168,75,.1);
-  background:rgba(200,168,75,.04);
+.forge-icon span{font-family:'Cinzel',serif;font-size:60px;color:var(--amber);text-shadow:0 0 30px var(--amber-dim);}
+
+.hero-title{
+  font-family:'Cinzel',serif;font-size:clamp(32px, 8vw, 64px);color:var(--fg);
+  letter-spacing:12px;margin-bottom:24px;text-transform:uppercase;
+}
+.hero-desc{
+  font-family:'Space Mono',monospace;font-size:12px;color:var(--dim);
+  max-width:600px;line-height:1.8;letter-spacing:2px;margin-bottom:56px;
 }
 
-/* ─ MANUSCRIPT COLUMN ─ */
-.scroll-wrap{
-  position:relative;z-index:10;
-  padding:0 24px 80px;
+.cta-group{display:flex;gap:32px;}
+.cta-btn{
+  padding:18px 48px;border:1px solid var(--amber-dim);color:var(--amber);
+  text-decoration:none;font-family:'Space Mono',monospace;font-size:11px;
+  letter-spacing:4px;text-transform:uppercase;transition:all 0.4s;
 }
-.manuscript{
-  max-width:760px;
-  margin:0 auto;
-  padding:60px 40px 60px 80px;
-  position:relative;
+.cta-btn:hover{
+  background:rgba(255,176,0,0.05);border-color:var(--amber);
+  box-shadow: 0 0 30px rgba(255,176,0,0.2);transform:translateY(-2px);
 }
-/* crimson margin line */
-.manuscript::before{
-  content:'';
-  position:absolute;
-  left:56px;top:0;bottom:0;
-  width:1px;
-  background:linear-gradient(to bottom,transparent,var(--crimson) 5%,var(--crimson) 95%,transparent);
-  opacity:.25;
-}
-/* margin annotations */
-.margin-note{
-  position:absolute;
-  left:0;
-  width:52px;
-  text-align:right;
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  color:var(--crimson);
-  opacity:.5;
-  letter-spacing:1px;
-}
+.cta-btn.dim{border-color:var(--border);color:var(--dim);}
+.cta-btn.dim:hover{border-color:var(--dim);color:var(--fg);}
 
-/* ─ VOL HEADER ─ */
-.vol-header{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  letter-spacing:3px;
-  color:var(--dim);
-  margin-bottom:40px;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  opacity:0;
-  animation:fadein .8s .2s forwards;
+/* FOOTER */
+.footer{
+  padding:40px 60px;display:flex;justify-content:space-between;
+  position:relative;z-index:10;border-top:1px solid var(--border);
 }
-.vol-rule{flex:1;height:1px;background:var(--border);}
-.vol-rule.r{background:linear-gradient(90deg,var(--border),transparent);}
-.vol-rule.l{background:linear-gradient(270deg,var(--border),transparent);}
+.f-seg{font-size:9px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;}
+.f-seg span{color:var(--amber-dim);}
 
-/* ─ HERO ─ */
-.hero-body{
-  position:relative;
-  margin-bottom:56px;
-  min-height:200px;
-}
-.illum-cap{
-  float:left;
-  font-family:'Cinzel',serif;
-  font-size:5.2rem;
-  line-height:.85;
-  color:var(--gold);
-  margin-right:6px;
-  margin-bottom:4px;
-  text-shadow:0 0 40px rgba(200,168,75,.35),0 0 80px rgba(200,168,75,.1);
-  opacity:0;
-  transform:scale(.85);
-  transition:opacity .7s .5s,transform .7s .5s;
-}
-.illum-cap.visible{opacity:1;transform:scale(1);}
-
-.typed-line{
-  display:block;
-  min-height:1.6em;
-  font-size:1.15rem;
-  line-height:1.75;
-  letter-spacing:.3px;
-}
-.typed-line.ms{
-  font-family:'IM Fell English',serif;
-  color:var(--parch);
-  font-style:italic;
-}
-.typed-line.trm{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.95rem;
-  color:#b0a070;
-  letter-spacing:.5px;
-}
-.typed-line.gold{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.95rem;
-  color:var(--gold-e);
-  letter-spacing:1px;
-}
-.typed-line.dim{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.9rem;
-  color:var(--dim);
-  letter-spacing:1px;
-}
-.typed-line.gap{min-height:.9em;display:block;}
-.cursor{
-  display:inline-block;
-  width:9px;height:15px;
-  background:var(--gold-e);
-  vertical-align:text-bottom;
-  margin-left:1px;
-  animation:blink .75s step-end infinite;
-}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
-
-/* ornament */
-.ornament{
-  clear:both;
-  text-align:center;
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  letter-spacing:4px;
-  color:var(--dim);
-  margin:48px 0 56px;
-  opacity:0;
-  transition:opacity .8s;
-}
-.ornament.visible{opacity:1;}
-
-/* ─ FOOTNOTES ─ */
-.footnotes{
-  margin-bottom:60px;
-  opacity:0;
-  transform:translateY(12px);
-  transition:opacity .8s,transform .8s;
-}
-.footnotes.visible{opacity:1;transform:none;}
-.fn-header{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  letter-spacing:3px;
-  color:var(--dim);
-  margin-bottom:20px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.fn-rule{flex:1;height:1px;background:var(--border);}
-.fn-item{
-  display:flex;
-  gap:20px;
-  padding:14px 0;
-  border-bottom:1px solid var(--border);
-  align-items:baseline;
-}
-.fn-num{
-  font-family:'Cinzel',serif;
-  font-size:11px;
-  color:var(--gold);
-  min-width:28px;
-  opacity:.7;
-  letter-spacing:1px;
-}
-.fn-title{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  letter-spacing:2px;
-  color:var(--parch);
-  min-width:120px;
-}
-.fn-desc{
-  font-family:'IM Fell English',serif;
-  font-style:italic;
-  font-size:.95rem;
-  color:var(--dim);
-  line-height:1.5;
-}
-
-/* ─ CO-WRITING ─ */
-.cowrite{
-  margin-bottom:60px;
-  opacity:0;
-  transform:translateY(12px);
-  transition:opacity .8s,transform .8s;
-}
-.cowrite.visible{opacity:1;transform:none;}
-.cw-header{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  letter-spacing:3px;
-  color:var(--dim);
-  margin-bottom:20px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.cw-line{
-  display:grid;
-  grid-template-columns:70px 1fr;
-  gap:16px;
-  padding:8px 0;
-  border-left:2px solid transparent;
-  padding-left:12px;
-  transition:border-color .3s;
-}
-.cw-line:hover{border-left-color:var(--border);}
-.cw-who{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  letter-spacing:2px;
-  padding-top:3px;
-}
-.cw-who.you{color:var(--crimson);opacity:.7;}
-.cw-who.story{color:var(--gold);opacity:.6;}
-.cw-text{
-  font-family:'IM Fell English',serif;
-  font-size:1rem;
-  line-height:1.7;
-  color:var(--parch);
-}
-.cw-line.ai .cw-text{
-  color:#a09070;
-  font-style:italic;
-}
-
-/* ─ CTA ─ */
-.cta-seal{
-  text-align:center;
-  padding:40px 0 20px;
-  opacity:0;
-  transition:opacity .8s;
-}
-.cta-seal.visible{opacity:1;}
-.seal-ornament{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  letter-spacing:4px;
-  color:var(--dim);
-  margin-bottom:32px;
-}
-.seal-text{
-  font-family:'Cinzel',serif;
-  font-size:1.4rem;
-  font-weight:400;
-  color:var(--gold);
-  letter-spacing:6px;
-  text-transform:uppercase;
-  margin-bottom:28px;
-  text-shadow:0 0 40px rgba(200,168,75,.15);
-}
-.seal-btn{
-  display:inline-block;
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  letter-spacing:4px;
-  color:var(--gold-e);
-  text-decoration:none;
-  border:1px solid var(--border);
-  padding:14px 40px;
-  position:relative;
-  overflow:hidden;
-  transition:border-color .4s,box-shadow .4s;
-}
-.seal-btn::before{
-  content:'';position:absolute;
-  top:0;left:-100%;width:100%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(200,168,75,.08),transparent);
-  transition:left .5s;
-}
-.seal-btn:hover{border-color:var(--gold);box-shadow:0 0 40px rgba(200,168,75,.1);}
-.seal-btn:hover::before{left:100%;}
-
-/* ─ FOOTER ─ */
-footer{
-  position:relative;z-index:10;
-  text-align:center;
-  padding:20px;
-  border-top:1px solid var(--border);
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;
-  letter-spacing:2px;
-  color:var(--dim);
-}
-footer a{color:var(--dim);text-decoration:none;}
-footer a:hover{color:var(--parch);}
-
-@keyframes fadein{to{opacity:1;}}
 </style>
 </head>
 <body>
 
-<div class="hex-background"><div class="hex-pattern"></div></div>
+<div class="forge-grid"></div>
 
 <header class="header">
-  <div>
-    <div class="logo">blendStory</div>
-    <div class="logo-sub">the collaborative codex</div>
-  </div>
-  <div class="header-rule"></div>
-  <a href="login/" class="enter-btn">[ enter ]</a>
+  <a href="index.html" class="brand">blendStory<span class="sub">V_0.46.0</span></a>
+  <div class="f-seg">STATUS: <span>CORE_STABLE</span></div>
 </header>
 
-<div class="scroll-wrap">
-<div class="manuscript">
-
-  <span class="margin-note" style="top:62px">§ I</span>
-
-  <!-- VOL HEADER -->
-  <div class="vol-header">
-    <span class="vol-rule l"></span>
-    <span>Vol. I</span>
-    <span style="color:var(--border)">·</span>
-    <span>The Collaborative Codex</span>
-    <span style="color:var(--border)">·</span>
-    <span>MMXXV</span>
-    <span class="vol-rule r"></span>
+<main class="hero">
+  <div class="forge-icon">
+    <span>B</span>
   </div>
-
-  <!-- HERO — typed manuscript -->
-  <div class="hero-body">
-    <span class="illum-cap" id="illumS">S</span>
-    <div id="typedLines"></div>
+  <h1 class="hero-title">The Forge</h1>
+  <p class="hero-desc">
+    BEHAVIORAL_AUTHORSHIP_INTERFACE. WIRING_CONSCIOUSNESS_THROUGH_NEURAL_NODES. 
+    ADMIN_LEVEL_ACCESS_ONLY.
+  </p>
+  
+  <div class="cta-group">
+    <a href="login/" class="cta-btn">[ ENTER_FORGE ]</a>
+    <a href="https://jezabel.net" class="cta-btn dim">[ JEZABEL.NET ]</a>
   </div>
+</main>
 
-  <!-- ornament divider -->
-  <div class="ornament" id="ornament">── ✦ ──── ☥ ──── ✦ ──</div>
-
-  <!-- FOOTNOTES -->
-  <div class="footnotes" id="footnotes">
-    <div class="fn-header">
-      <span class="fn-rule"></span>
-      <span>annotations</span>
-      <span class="fn-rule"></span>
-    </div>
-    <div class="fn-item">
-      <span class="fn-num">I.</span>
-      <span class="fn-title">collaborate</span>
-      <span class="fn-desc">narrative structure · character arcs · plot turns · thematic consistency across the length of a work</span>
-    </div>
-    <div class="fn-item">
-      <span class="fn-num">II.</span>
-      <span class="fn-title">accelerate</span>
-      <span class="fn-desc">outline to first draft · scene iteration · unblocking · the work moves when you move with it</span>
-    </div>
-    <div class="fn-item" style="border-bottom:none">
-      <span class="fn-num">III.</span>
-      <span class="fn-title">expand</span>
-      <span class="fn-desc">alternate endings · branching timelines · voice testing · the story has more rooms than you entered</span>
-    </div>
-  </div>
-
-  <span class="margin-note" style="top:620px">✦</span>
-
-  <!-- CO-WRITING -->
-  <div class="cowrite" id="cowrite">
-    <div class="cw-header">
-      <span class="fn-rule"></span>
-      <span>a passage, co-written</span>
-      <span class="fn-rule"></span>
-    </div>
-    <div class="cw-line">
-      <span class="cw-who you">you :</span>
-      <span class="cw-text">she reached for the door —</span>
-    </div>
-    <div class="cw-line ai">
-      <span class="cw-who story">story :</span>
-      <span class="cw-text">— knowing it had been waiting since before the house was built.</span>
-    </div>
-    <div class="cw-line">
-      <span class="cw-who you">you :</span>
-      <span class="cw-text">the hallway smelled of old paper and something alive.</span>
-    </div>
-    <div class="cw-line ai">
-      <span class="cw-who story">story :</span>
-      <span class="cw-text">the smell of a story breathing in the dark, patient as a pharaoh's seal.</span>
-    </div>
-    <div class="cw-line">
-      <span class="cw-who you">you :</span>
-      <span class="cw-text">I did not choose to be here.</span>
-    </div>
-    <div class="cw-line ai">
-      <span class="cw-who story">story :</span>
-      <span class="cw-text">the manuscript disagrees. your name was written in its margin before your birth.</span>
-    </div>
-  </div>
-
-  <span class="margin-note" style="top:870px">☥</span>
-
-  <!-- CTA -->
-  <div class="cta-seal" id="ctaSeal">
-    <div class="seal-ornament">── ✦ ────────── ☥ ────────── ✦ ──</div>
-    <div class="seal-text">open the codex</div>
-    <a href="login/" class="seal-btn">[ enter the manuscript ]</a>
-  </div>
-
-</div>
-</div>
-
-<footer>
-  powered by <a href="https://lempyra.com">Lempyrλ</a> &nbsp;·&nbsp; blendStory.xyz
+<footer class="footer">
+  <div class="f-seg">© 2026 // AMBER_FORGE_INFRASTRUCTURE</div>
+  <div class="f-seg">DESIGN_SYSTEM: <span>BLUEPRINT_ALPHA</span></div>
 </footer>
 
-<script>
-// ─ TYPING SEQUENCE ─
-var LINES = [
-  {text:'tories do not arrive complete.',      speed:34, cls:'ms',   delay:0},
-  {text:'They surface\u2014fragmented, luminous\u2014', speed:28, cls:'ms',   delay:180},
-  {text:'in the margins between sleep and waking.', speed:28, cls:'ms', delay:100},
-  {text:'', cls:'gap', delay:700},
-  {text:'blendStory is the intelligence',      speed:36, cls:'trm',  delay:0},
-  {text:'that writes alongside yours.',        speed:32, cls:'trm',  delay:150},
-  {text:'not before. not after.',              speed:30, cls:'trm',  delay:80},
-  {text:'together.\u2003in the same ink.',     speed:40, cls:'gold', delay:500},
-  {text:'', cls:'gap', delay:1000},
-  {text:'\u2234\u2003your co-author awaits.', speed:48, cls:'dim',  delay:0, last:true}
-];
-
-var lineIdx=0;
-var cursorEl=document.createElement('span');
-cursorEl.className='cursor';
-
-function startTyping(){
-  var S=document.getElementById('illumS');
-  S.classList.add('visible');
-  setTimeout(runLine, 600);
-}
-
-function runLine(){
-  if(lineIdx>=LINES.length) return;
-  var L=LINES[lineIdx++];
-  if(L.cls==='gap'){
-    setTimeout(runLine, L.delay);
-    return;
-  }
-  var container=document.getElementById('typedLines');
-  var div=document.createElement('div');
-  div.className='typed-line '+L.cls;
-  container.appendChild(div);
-  div.appendChild(cursorEl);
-  var chars=Array.from(L.text);
-  var i=0;
-  function tick(){
-    if(i<chars.length){
-      div.insertBefore(document.createTextNode(chars[i++]),cursorEl);
-      setTimeout(tick, L.speed+(Math.random()*14));
-    } else {
-      if(L.last){
-        // leave cursor
-        revealAfterTyping();
-      } else {
-        div.removeChild(cursorEl);
-        setTimeout(runLine, L.delay||180);
-      }
-    }
-  }
-  tick();
-}
-
-function revealAfterTyping(){
-  var ornament=document.getElementById('ornament');
-  var footnotes=document.getElementById('footnotes');
-  var cowrite=document.getElementById('cowrite');
-  var cta=document.getElementById('ctaSeal');
-  setTimeout(function(){ornament.classList.add('visible');},200);
-  setTimeout(function(){footnotes.classList.add('visible');},600);
-  setTimeout(function(){cowrite.classList.add('visible');},1100);
-  setTimeout(function(){cta.classList.add('visible');},1600);
-}
-
-window.addEventListener('load', function(){
-  generateHexPattern();
-  setTimeout(startTyping, 300);
-});
-window.addEventListener('resize', generateHexPattern);
-
-// ─ HEX PATTERN (preserved + amber-toned) ─
-function generateHexPattern(){
-  var container=document.querySelector('.hex-pattern');
-  container.innerHTML='';
-  var hexWidth=40,hexHeight=46;
-  var cols=Math.ceil(window.innerWidth/(hexWidth*.75))+2;
-  var rows=Math.ceil(window.innerHeight/hexHeight)+2;
-  for(var row=0;row<rows;row++){
-    for(var col=0;col<cols;col++){
-      var hex=document.createElement('div');
-      hex.className='hex';
-      hex.dataset.col=col;hex.dataset.row=row;
-      hex.style.left=(col*hexWidth*.75)+'px';
-      hex.style.top=(row*hexHeight+(col%2)*(hexHeight/2))+'px';
-      hex.innerHTML='<svg viewBox="0 0 40 46"><polygon points="20,1 38,12 38,34 20,45 2,34 2,12"/></svg>';
-      container.appendChild(hex);
-    }
-  }
-  startHexPulse();
-}
-
-function startHexPulse(){
-  var hexes=document.querySelectorAll('.hex');
-  var base='#2e2208';
-  function wave(sc,sr,color){
-    hexes.forEach(function(h){
-      var c=parseInt(h.dataset.col),r=parseInt(h.dataset.row);
-      var d=Math.sqrt(Math.pow(c-sc,2)+Math.pow(r-sr,2));
-      setTimeout(function(){
-        var p=h.querySelector('polygon');
-        p.style.transition='all .25s ease-out';
-        p.setAttribute('stroke',color||'#c8a84b');
-        p.setAttribute('stroke-width','2');
-        p.setAttribute('fill',color||'#c8a84b');
-        p.setAttribute('fill-opacity','.12');
-        h.style.transform='scale(1.08)';
-        setTimeout(function(){
-          p.style.transition='all .5s ease-in';
-          p.setAttribute('stroke',base);
-          p.setAttribute('stroke-width','1');
-          p.setAttribute('fill','none');
-          p.setAttribute('fill-opacity','0');
-          h.style.transform='scale(1)';
-        },500);
-      },d*45);
-    });
-  }
-  document.addEventListener('click',function(e){
-    var sc=Math.floor(e.clientX/(40*.75)),sr=Math.floor(e.clientY/46);
-    var colors=['#c8a84b','#ffcc33','#7a1515','#3a6b5a'];
-    wave(sc,sr,colors[Math.floor(Math.random()*colors.length)]);
-  });
-  function autoWave(){
-    wave(Math.floor(Math.random()*20),Math.floor(Math.random()*15),'#c8a84b');
-    setTimeout(autoWave,3500+Math.random()*4000);
-  }
-  autoWave();
-}
-</script>
 </body>
 </html>

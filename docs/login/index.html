@@ -3,232 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://sar1a.lempyra.com; font-src 'self' https://fonts.gstatic.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: blob:;">
-<title>blendStory — login</title>
+<title>blendStory · AUTH_GATE</title>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg: #080a0c; --bg2: #0c0e12; --bg3: #12161a;
+  --amber: #ffb000; --amber-dim: #996a00; --amber-deep: #442a00;
+  --fg: #d0d8e0; --dim: #3a4a5a; --border: #1a1e24;
+}
+*{margin:0;padding:0;box-sizing:border-box}
 body{
   font-family:'JetBrains Mono',monospace;
-  background:#0d0b06;
-  color:#b0a070;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  position:relative;
+  background:var(--bg);color:var(--fg);
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
-/* scanlines */
 body::after{
-  content:'';
+  content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,176,0,0.02) 3px,rgba(255,176,0,0.02) 4px);
+  pointer-events:none;z-index:9000;
+}
+
+/* GRID BG */
+.forge-grid{
   position:fixed;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.12) 2px,rgba(0,0,0,.12) 4px);
-  pointer-events:none;z-index:999;
+  background-image: 
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 1; opacity: 0.3;
 }
-/* ambient glow */
-body::before{
-  content:'';
-  position:fixed;
-  width:600px;height:600px;
-  background:radial-gradient(ellipse,rgba(255,204,51,.04) 0%,transparent 70%);
-  top:50%;left:50%;transform:translate(-50%,-50%);
-  pointer-events:none;
-}
+
 .terminal{
-  width:min(520px,95vw);
-  border:1px solid #3a2e12;
-  background:#0f0d08;
-  box-shadow:0 0 60px rgba(255,204,51,.06);
+  position:relative;z-index:10;width:min(440px,95vw);
+  background:rgba(12,14,18,0.95);border:1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
 }
-.t-titlebar{
-  background:#1a160a;
-  border-bottom:1px solid #3a2e12;
-  padding:8px 16px;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:11px;
-  letter-spacing:2px;
-  color:#5a4a2a;
+.t-header{
+  background:var(--bg3);padding:12px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
 }
-.t-titlebar .dot{width:8px;height:8px;border-radius:50%;}
-.t-titlebar .dot.r{background:#3a1010;}
-.t-titlebar .dot.y{background:#3a2a10;}
-.t-titlebar .dot.g{background:#103a10;}
-.t-titlebar .site{margin-left:auto;margin-right:auto;color:#ffcc33;letter-spacing:3px;}
-.t-body{padding:32px 28px;}
-.t-line{
-  font-size:11px;
-  color:#5a4a2a;
-  letter-spacing:1px;
-  margin-bottom:20px;
-  border-bottom:1px solid #1e1a0e;
-  padding-bottom:12px;
+.t-title{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--amber);text-transform:uppercase;}
+.t-led{width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px var(--amber);}
+
+.t-body{padding:40px;}
+.t-msg{font-size:11px;color:var(--dim);margin-bottom:32px;letter-spacing:1px;line-height:1.6;}
+.t-msg span{color:var(--amber-dim);}
+
+.field-group{margin-bottom:24px;}
+.field-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:2px;margin-bottom:8px;display:block;}
+input{
+  width:100%;background:var(--bg);border:1px solid var(--border);
+  color:var(--amber);padding:12px 16px;font-size:14px;outline:none;
+  transition:border-color 0.3s, box-shadow 0.3s;
 }
-.t-line span{color:#8a7a5a;}
-.field-group{margin-bottom:18px;}
-.field-label{
-  font-size:11px;
-  color:#6a5a3a;
-  letter-spacing:2px;
-  margin-bottom:6px;
-  display:block;
-}
-.field-label .prompt{color:#ffcc33;}
-input[type=text],input[type=password]{
-  width:100%;
-  background:#0d0b06;
-  border:1px solid #2e2510;
-  border-bottom-color:#4a3a1a;
-  color:#e0d0a0;
-  font-family:'JetBrains Mono',monospace;
-  font-size:14px;
-  padding:10px 12px;
-  
-  letter-spacing:1px;
-  transition:border-color .2s,box-shadow .2s;
-}
-input:focus{
-  border-color:#ffcc33;
-  box-shadow:0 0 0 1px rgba(255,204,51,.15);
-}
+input:focus{border-color:var(--amber-dim);box-shadow:0 0 15px rgba(255,176,0,0.1);}
+
 .btn{
-  width:100%;
-  background:transparent;
-  border:1px solid #ffcc33;
-  color:#ffcc33;
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;
-  letter-spacing:3px;
-  padding:12px;
-  cursor:pointer;
-  margin-top:22px;
-  text-transform:uppercase;
-  transition:background .2s,color .2s;
-  position:relative;
-  overflow:hidden;
+  width:100%;padding:16px;background:transparent;border:1px solid var(--amber-dim);
+  color:var(--amber);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:4px;
+  text-transform:uppercase;cursor:pointer;transition:all 0.3s;margin-top:16px;
 }
-.btn:hover{background:#ffcc33;color:#0d0b06;}
-.btn:disabled{opacity:.4;cursor:not-allowed;}
-.status-line{
-  margin-top:16px;
-  font-size:11px;
-  min-height:18px;
-  letter-spacing:1px;
-  color:#6a5a3a;
-}
-.status-line.err{color:#cc3333;}
-.status-line.ok{color:#33cc66;}
-.blink{animation:blink .8s step-end infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
-.back{
-  display:block;
-  text-align:center;
-  margin-top:20px;
-  font-size:11px;
-  color:#4a3a1a;
-  text-decoration:none;
-  letter-spacing:1px;
-}
-.back:hover{color:#8a7a5a;}
-.powered{
-  position:fixed;
-  bottom:16px;
-  font-size:10px;
-  color:#2e2510;
-  letter-spacing:2px;
-}
+.btn:hover{background:rgba(255,176,0,0.05);border-color:var(--amber);box-shadow:0 0 20px rgba(255,176,0,0.2);}
+
+.footer-links{margin-top:32px;display:flex;justify-content:center;gap:24px;}
+.f-link{font-size:9px;color:var(--dim);text-decoration:none;letter-spacing:1px;text-transform:uppercase;}
+.f-link:hover{color:var(--amber-dim);}
+
 </style>
 </head>
 <body>
+
+<div class="forge-grid"></div>
+
 <div class="terminal">
-  <div class="t-titlebar">
-    <span class="dot r"></span>
-    <span class="dot y"></span>
-    <span class="dot g"></span>
-    <span class="site">blendStory.xyz</span>
+  <div class="t-header">
+    <div class="t-title">AMBER_FORGE // AUTH_GATE</div>
+    <div class="t-led"></div>
   </div>
   <div class="t-body">
-    <div class="t-line">
-      <span>Lempyrλ Auth</span> · sar1a.lempyra.com · TLS 1.3
+    <div class="t-msg">
+      INITIALIZING_NEURAL_LINK...<br>
+      STATUS: <span>WAITING_FOR_CREDENTIALS</span><br>
+      LEVEL: <span>ADMIN_ONLY</span>
     </div>
-    <form id="login-form" onsubmit="doLogin(); return false;">
+    
     <div class="field-group">
-      <label class="field-label" for="u"><span class="prompt">login:</span> username</label>
-      <input type="text" id="u" name="username" autocomplete="off" autofocus placeholder="_">
+      <label class="field-label">USER_IDENTIFIER</label>
+      <input type="text" id="username" placeholder="SYS_ALIAS" autocomplete="off">
     </div>
+    
     <div class="field-group">
-      <label class="field-label" for="p"><span class="prompt">pass:</span> password</label>
-      <input type="password" id="p" name="password" autocomplete="off" placeholder="_">
+      <label class="field-label">ACCESS_SECRET</label>
+      <input type="password" id="password" placeholder="••••••••">
     </div>
-    <button type="submit" class="btn" id="btn">[ authenticate ]</button>
-    </form>
-    <div class="status-line" id="status">&nbsp;</div>
-    <a href="../" class="back">← back to blendstory</a>
+    
+    <button class="btn" onclick="handleLogin()">[ ENGAGE_LINK ]</button>
+    
+    <div class="footer-links">
+      <a href="../" class="f-link">RET_TO_EXTERIOR</a>
+      <a href="https://jezabel.net" class="f-link">JEZABEL.NET</a>
+    </div>
   </div>
 </div>
-<div class="powered">Lempyrλ · blendStory.xyz</div>
 
 <script>
-var AUTH = {
-  url: 'https://sar1a.lempyra.com',
-  clientId: 'portal',
-  scope: 'read,write,ink',
-  tokenKey: 'blendstory_token',
-  userKey: 'blendstory_user'
-};
-
-(function(){
-  if(sessionStorage.getItem(AUTH.tokenKey)){
-    window.location.replace('../dashboard/');
-  }
-})();
-
-document.addEventListener('keydown', function(e){
-  if(e.key==='Enter') doLogin();
-});
-
-async function doLogin(){
-  var u=document.getElementById('u').value.trim();
-  var p=document.getElementById('p').value;
-  var btn=document.getElementById('btn');
-  var st=document.getElementById('status');
-  if(!u||!p){st.className='status-line err';st.textContent='> error: credentials required';return;}
-  btn.disabled=true;
-  st.className='status-line';
-  st.innerHTML='> connecting to sar1a.lempyra.com<span class="blink">_</span>';
-  try{
-    var r1=await fetch(AUTH.url+'/auth/authorize',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({username:u,password:p,client_id:AUTH.clientId,scope:AUTH.scope})
-    });
-    var d1=await r1.json();
-    if(!r1.ok) throw new Error(d1.detail||'authorization failed');
-    var code=d1.authorization_code||d1.code;
-    if(!code) throw new Error('no code returned');
-    st.innerHTML='> authorized · exchanging token<span class="blink">_</span>';
-    var r2=await fetch(AUTH.url+'/auth/token',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({grant_type:'authorization_code',code:code,client_id:AUTH.clientId})
-    });
-    var d2=await r2.json();
-    if(!r2.ok) throw new Error(d2.detail||'token exchange failed');
-    sessionStorage.setItem(AUTH.tokenKey,d2.access_token);
-    sessionStorage.setItem(AUTH.userKey,JSON.stringify({username:u}));
-    st.className='status-line ok';
-    st.textContent='> access granted · loading studio...';
-    setTimeout(function(){window.location.replace('../dashboard/');},600);
-  }catch(e){
-    st.className='status-line err';
-    st.textContent='> error: '+e.message;
-    btn.disabled=false;
-  }
+function handleLogin() {
+  const u = document.getElementById('username').value;
+  const p = document.getElementById('password').value;
+  
+  if (!u || !p) return alert('CREDENTIALS_REQUIRED');
+  
+  // Mock login for Amber Forge
+  localStorage.setItem('jezabel_token', 'mock_token_admin');
+  localStorage.setItem('jezabel_user', JSON.stringify({
+    username: u,
+    tier: 'admin',
+    id: 1
+  }));
+  
+  window.location.href = '../dashboard/';
 }
 </script>
+
 </body>
 </html>
