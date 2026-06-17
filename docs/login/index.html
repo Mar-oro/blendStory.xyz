@@ -110,21 +110,65 @@ input:focus{border-color:var(--amber-dim);box-shadow:0 0 15px rgba(255,176,0,0.1
 </div>
 
 <script>
-function handleLogin() {
-  const u = document.getElementById('username').value;
-  const p = document.getElementById('password').value;
+var AUTH = {
+  url: 'https://sar1a.lempyra.com',
+  clientId: 'portal',
+  scope: 'read,write,ink',
+  tokenKey: 'blendstory_token',
+  userKey: 'blendstory_user'
+};
+
+(function(){
+  if(sessionStorage.getItem(AUTH.tokenKey)){
+    window.location.replace('../dashboard/');
+  }
+})();
+
+async function handleLogin() {
+  var u = document.getElementById('username').value.trim();
+  var p = document.getElementById('password').value;
   
   if (!u || !p) return alert('CREDENTIALS_REQUIRED');
   
-  // Mock login for Amber Forge
-  localStorage.setItem('jezabel_token', 'mock_token_admin');
-  localStorage.setItem('jezabel_user', JSON.stringify({
-    username: u,
-    tier: 'admin',
-    id: 1
-  }));
-  
-  window.location.href = '../dashboard/';
+  const btn = document.querySelector('.btn');
+  const msg = document.querySelector('.t-msg');
+  btn.disabled = true;
+  msg.innerHTML = 'CONNECTING_TO_SAR1A...<br>STATUS: <span>AUTHORIZING</span>';
+
+  try {
+    // 1. Authorize
+    var r1 = await fetch(AUTH.url + '/auth/authorize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: u, password: p, client_id: AUTH.clientId, scope: AUTH.scope })
+    });
+    var d1 = await r1.json();
+    if (!r1.ok) throw new Error(d1.detail || 'AUTHORIZATION_FAILED');
+    
+    var code = d1.authorization_code || d1.code;
+    if (!code) throw new Error('NO_CODE_RETURNED');
+    
+    msg.innerHTML = 'AUTHORIZED...<br>STATUS: <span>EXCHANGING_TOKEN</span>';
+
+    // 2. Token exchange
+    var r2 = await fetch(AUTH.url + '/auth/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ grant_type: 'authorization_code', code: code, client_id: AUTH.clientId })
+    });
+    var d2 = await r2.json();
+    if (!r2.ok) throw new Error(d2.detail || 'TOKEN_EXCHANGE_FAILED');
+    
+    sessionStorage.setItem(AUTH.tokenKey, d2.access_token);
+    sessionStorage.setItem(AUTH.userKey, JSON.stringify({ username: u }));
+    
+    msg.innerHTML = 'ACCESS_GRANTED...<br>STATUS: <span>LOADING_FORGE</span>';
+    setTimeout(() => { window.location.href = '../dashboard/'; }, 600);
+  } catch (e) {
+    alert('LOGIN_ERROR: ' + e.message);
+    msg.innerHTML = 'INITIALIZING_NEURAL_LINK...<br>STATUS: <span style="color:var(--led-err)">AUTH_FAILED</span>';
+    btn.disabled = false;
+  }
 }
 </script>
 
