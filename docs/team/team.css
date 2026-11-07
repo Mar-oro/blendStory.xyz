@@ -21,3 +21,8 @@ h1 em,.role,.roots p{color:#c4af83}.eyebrow,.chapter{color:#c4af83}
 .ceo-feature .photo,.cdo-feature .photo{width:100%;aspect-ratio:4/4.6}
 .closing-team .founder{margin-top:0;margin-bottom:65px}.cdo-feature{margin-top:0}
 @media(max-width:700px){.ceo-feature,.cdo-feature{grid-template-columns:1fr;gap:26px}.leader-copy .person-heading{margin-top:14px}.leader-copy h2{font-size:39px}.leader-copy .bio{font-size:14px}.closing-team .founder{margin-bottom:40px}.intro{padding-bottom:24px}h1{font-size:clamp(40px,9vw,60px)}.intro-bottom{margin-top:24px}.people{padding-top:25px}.ceo-feature .photo,.cdo-feature .photo{aspect-ratio:4/4.6}}
+
+/* Editorial artwork is shown in full, including its typography. */
+.ceo-feature .photo,.cdo-feature .photo{aspect-ratio:auto}
+.ceo-feature .photo img,.cdo-feature .photo img{height:auto;aspect-ratio:auto;object-fit:contain}
+.ceo-feature .photo:hover img,.cdo-feature .photo:hover img{transform:none}
