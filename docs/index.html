@@ -27,19 +27,7 @@ body{
   min-height:100vh;
   overflow-x:hidden;
 }
-/* scanlines */
-body::after{
-  content:'';position:fixed;inset:0;
-  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.05) 3px,rgba(0,0,0,.05) 4px);
-  pointer-events:none;z-index:9000;
-}
-/* hex background */
-.hex-background{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden;opacity:.35;}
-.hex-pattern{position:absolute;width:100%;height:100%;}
-.hex{position:absolute;width:40px;height:46px;transition:all .3s ease;}
-.hex svg{width:100%;height:100%;overflow:visible;}
-.hex polygon{stroke:#2e2208;fill:none;stroke-width:1;}
-
+/* Clean background; no scanlines or hex grid. */
 /* ─ HEADER ─ */
 .header{
   position:relative;z-index:10;
@@ -374,7 +362,7 @@ footer a:hover{color:var(--parch);}
 </head>
 <body>
 
-<div class="hex-background"><div class="hex-pattern"></div></div>
+
 
 <header class="header">
   <div>
@@ -553,69 +541,10 @@ function revealAfterTyping(){
 }
 
 window.addEventListener('load', function(){
-  generateHexPattern();
   setTimeout(startTyping, 300);
 });
-window.addEventListener('resize', generateHexPattern);
 
-// ─ HEX PATTERN (preserved + amber-toned) ─
-function generateHexPattern(){
-  var container=document.querySelector('.hex-pattern');
-  container.innerHTML='';
-  var hexWidth=40,hexHeight=46;
-  var cols=Math.ceil(window.innerWidth/(hexWidth*.75))+2;
-  var rows=Math.ceil(window.innerHeight/hexHeight)+2;
-  for(var row=0;row<rows;row++){
-    for(var col=0;col<cols;col++){
-      var hex=document.createElement('div');
-      hex.className='hex';
-      hex.dataset.col=col;hex.dataset.row=row;
-      hex.style.left=(col*hexWidth*.75)+'px';
-      hex.style.top=(row*hexHeight+(col%2)*(hexHeight/2))+'px';
-      hex.innerHTML='<svg viewBox="0 0 40 46"><polygon points="20,1 38,12 38,34 20,45 2,34 2,12"/></svg>';
-      container.appendChild(hex);
-    }
-  }
-  startHexPulse();
-}
 
-function startHexPulse(){
-  var hexes=document.querySelectorAll('.hex');
-  var base='#2e2208';
-  function wave(sc,sr,color){
-    hexes.forEach(function(h){
-      var c=parseInt(h.dataset.col),r=parseInt(h.dataset.row);
-      var d=Math.sqrt(Math.pow(c-sc,2)+Math.pow(r-sr,2));
-      setTimeout(function(){
-        var p=h.querySelector('polygon');
-        p.style.transition='all .25s ease-out';
-        p.setAttribute('stroke',color||'#c8a84b');
-        p.setAttribute('stroke-width','2');
-        p.setAttribute('fill',color||'#c8a84b');
-        p.setAttribute('fill-opacity','.12');
-        h.style.transform='scale(1.08)';
-        setTimeout(function(){
-          p.style.transition='all .5s ease-in';
-          p.setAttribute('stroke',base);
-          p.setAttribute('stroke-width','1');
-          p.setAttribute('fill','none');
-          p.setAttribute('fill-opacity','0');
-          h.style.transform='scale(1)';
-        },500);
-      },d*45);
-    });
-  }
-  document.addEventListener('click',function(e){
-    var sc=Math.floor(e.clientX/(40*.75)),sr=Math.floor(e.clientY/46);
-    var colors=['#c8a84b','#ffcc33','#7a1515','#3a6b5a'];
-    wave(sc,sr,colors[Math.floor(Math.random()*colors.length)]);
-  });
-  function autoWave(){
-    wave(Math.floor(Math.random()*20),Math.floor(Math.random()*15),'#c8a84b');
-    setTimeout(autoWave,3500+Math.random()*4000);
-  }
-  autoWave();
-}
 </script>
 </body>
 </html>
