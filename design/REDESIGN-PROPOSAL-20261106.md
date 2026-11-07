@@ -23,7 +23,7 @@ El logo original de The Garden se conserva intacto como referencia y vínculo co
 ## Estado
 
 - `docs/team/`: orden actualizado y tema oscuro, instalado localmente.
-- `docs/index.html`: se retiró el fondo hexagonal y sus ciclos de animación.
-- `docs/design-preview/`: propuesta visual independiente; no sustituye la portada ni está enlazada desde ella.
-- Sin cambios de backend, gateway o servidores. Sin publicación en este lote hasta nueva orden.
-- Pendiente de K: dirección visual, texto comercial y uso del símbolo floral como identidad futura.
+- `docs/index.html`: rediseño aprobado por K e integrado como portada principal; assets en `docs/assets/blendstory.css` y `bloom.js`.
+- `docs/design-preview/`: eliminado al promover el rediseño a la portada, por orden de K.
+- K autorizó publicar la portada. Sin cambios de backend, gateway o servidores.
+- Dirección visual aprobada para la portada. Pendiente: identidad de marca definitiva y siguiente etapa del studio/login.
