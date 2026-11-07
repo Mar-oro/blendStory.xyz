@@ -26,3 +26,6 @@ h1 em,.role,.roots p{color:#c4af83}.eyebrow,.chapter{color:#c4af83}
 .ceo-feature .photo,.cdo-feature .photo{aspect-ratio:auto}
 .ceo-feature .photo img,.cdo-feature .photo img{height:auto;aspect-ratio:auto;object-fit:contain}
 .ceo-feature .photo:hover img,.cdo-feature .photo:hover img{transform:none}
+
+/* Approved Lilith DAE portrait, shown uncropped. */
+.dae-portrait img{display:block;width:100%;height:auto}.dae-grid .entity-art{height:auto;aspect-ratio:3/4}
