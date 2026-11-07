@@ -14,6 +14,14 @@
 
     try {
         var payload = JSON.parse(atob(token.split('.')[1]));
+        
+        // Sync payload to user storage so role/id are available to dashboards
+        var userKey = TOKEN_KEY.replace('_token', '_user');
+        var existingUser = JSON.parse(sessionStorage.getItem(userKey) || '{}');
+        // Merge payload into existing user data, preferring payload values
+        var updatedUser = Object.assign({}, existingUser, payload);
+        sessionStorage.setItem(userKey, JSON.stringify(updatedUser));
+
         if (payload.exp && payload.exp < Date.now() / 1000) {
             sessionStorage.removeItem(TOKEN_KEY);
             redirect();
