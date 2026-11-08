@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1280" viewBox="0 0 720 1280" role="img" aria-labelledby="title desc"><title id="title">Flower Party × The Garden</title><desc id="desc">Diseñá tu ramo de flores naturales frescas, disfrutá 3 drinks de Berry Wild y conectá con otras mujeres. Todos los jueves de noviembre y diciembre. Arte floral diferente cada jueves. Valor L800. Lugar: The Garden by Cesiah Paola. Incluye el ramo y 3 drinks. Reservas por WhatsApp al +504 9672-4404; horario por confirmar.</desc><defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1280" viewBox="0 0 720 1280" role="img" aria-labelledby="title desc"><title id="title">Flower Party × The Garden</title><desc id="desc">Diseñá tu ramo de flores naturales frescas, disfrutá drinks de BerryWildHN y conectá con otras mujeres. Todos los jueves de noviembre y diciembre. Arte floral diferente cada jueves. Valor L800. Lugar: The Garden by Cesiah Paola. Incluye el ramo y drinks. Reservas por WhatsApp al +504 9672-4404; horario por confirmar.</desc><defs>
 <radialGradient id="rose"><stop stop-color="#fff0ed"/><stop offset=".52" stop-color="#edb9bd"/><stop offset="1" stop-color="#b76f87"/></radialGradient>
 <radialGradient id="cream"><stop stop-color="#fffef1"/><stop offset=".65" stop-color="#f5e6b9"/><stop offset="1" stop-color="#d7bb86"/></radialGradient>
 <radialGradient id="lilac"><stop stop-color="#eee6fa"/><stop offset="1" stop-color="#a98bb4"/></radialGradient>
@@ -16,8 +16,8 @@
 <text x="664" y="323" text-anchor="end" font-size="20" class="gold small">× THE GARDEN</text>
 
 <text x="56" y="806" font-size="39" class="serif">Una pausa para florecer.</text>
-<text x="56" y="850" font-size="22" class="muted"><tspan x="56">En The Garden, creá tu propio ramo con</tspan><tspan x="56" dy="33">flores frescas, disfrutá 3 drinks de Berry Wild</tspan><tspan x="56" dy="33">y conectá con mujeres en una experiencia única.</tspan></text>
-<text x="56" y="956" font-size="15" class="gold small">INCLUYE TU RAMO + 3 DRINKS</text><path d="M56 981H664" stroke="#c3ad80"/>
+<text x="56" y="850" font-size="22" class="muted"><tspan x="56">En The Garden, creá tu propio ramo con</tspan><tspan x="56" dy="33">flores frescas, disfrutá drinks de <a href="https://www.instagram.com/berrywildhn/" target="_blank" rel="noopener noreferrer"><tspan font-weight="600">BerryWildHN</tspan></a></tspan><tspan x="56" dy="33">y conectá con mujeres en una experiencia única.</tspan></text>
+<text x="56" y="956" font-size="15" class="gold small">INCLUYE TU RAMO + DRINKS</text><path d="M56 981H664" stroke="#c3ad80"/>
 <text x="56" y="1018" font-size="13" class="gold small">TODOS LOS JUEVES</text><text x="56" y="1055" font-size="31" class="serif">Noviembre y diciembre</text>
 <text x="664" y="1054" text-anchor="end" font-size="52" class="serif gold">L800</text>
 <text x="56" y="1102" font-size="20">Un arte floral diferente cada jueves.</text>
