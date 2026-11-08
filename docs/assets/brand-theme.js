@@ -1,6 +1,6 @@
 (()=>{'use strict';
 const root=document.documentElement,reduce=matchMedia('(prefers-reduced-motion: reduce)');
-const stops=[{accent:[107,225,151],secondary:[26,112,72],line:[28,64,43]},{accent:[226,133,171],secondary:[109,36,106],line:[66,27,57]},{accent:[245,153,105],secondary:[144,40,30],line:[77,33,23]}];
+const stops=[{accent:[205,177,114],secondary:[18,67,43],line:[24,51,34]},{accent:[214,184,128],secondary:[68,19,47],line:[53,20,42]},{accent:[198,166,102],secondary:[47,24,61],line:[38,23,46]}];
 let elapsed=0,last=performance.now(),paused=reduce.matches,timer;
 const mix=(a,b,f)=>a.map((v,i)=>Math.round(v+(b[i]-v)*f));
 const api={current:stops[0],get paused(){return paused},setPaused(value){paused=value;last=performance.now();updateButton()},};
