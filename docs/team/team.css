@@ -29,3 +29,7 @@ h1 em,.role,.roots p{color:#c4af83}.eyebrow,.chapter{color:#c4af83}
 
 /* Approved Lilith DAE portrait, shown uncropped. */
 .dae-portrait img{display:block;width:100%;height:auto}.dae-grid .entity-art{height:auto;aspect-ratio:3/4}
+
+/* Founder closes the team after CDO. */
+.closing-team .founder{margin-top:65px;margin-bottom:0}
+@media(max-width:700px){.closing-team .founder{margin-top:40px;margin-bottom:0}}
