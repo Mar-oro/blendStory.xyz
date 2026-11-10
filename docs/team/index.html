@@ -6,7 +6,7 @@
   <meta name="description" content="Meet the people and Digital Autonomous Entities shaping Blendstory. Human direction, creative intelligence.">
   <meta name="theme-color" content="#000000">
   <title>The people behind the story — blendStory</title>
-  <link rel="stylesheet" href="team.css"><link rel="stylesheet" href="../assets/oled.css">
+  <link rel="stylesheet" href="team.css"><link rel="stylesheet" href="../assets/oled.css"><link rel="stylesheet" href="organization.css">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg?v=20261107"><link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png?v=20261107"><link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png?v=20261107"></head>
 <body>
   <header class="masthead"><a class="wordmark" href="../" aria-label="Blendstory home">blend<span>Story</span><i>✳</i></a><a class="back" href="../">← The codex</a></header>
@@ -14,27 +14,40 @@
     <section class="intro" aria-labelledby="page-title">
       <div class="eyebrow"><span class="live-dot"></span> The people & the possibilities</div>
       <h1 id="page-title">A human touch.<br><em>A different kind<br class="desktop-break"> of intelligence.</em></h1>
-      <div class="intro-bottom"><p>Stories begin with people.<br>Meet the minds giving ours its shape.</p><a href="#people" class="round-link" aria-label="Meet our team">↓</a><span class="chapter">01 / THE TEAM</span></div>
+      <div class="intro-bottom"><p>Stories begin with people.<br>Meet the minds giving ours its shape.</p><a href="#organization" class="round-link" aria-label="Meet our team">↓</a><span class="chapter">01 / THE TEAM</span></div>
       <svg class="petals" viewBox="0 0 500 500" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1"><ellipse cx="250" cy="250" rx="80" ry="210"/><ellipse cx="250" cy="250" rx="80" ry="210" transform="rotate(45 250 250)"/><ellipse cx="250" cy="250" rx="80" ry="210" transform="rotate(90 250 250)"/><ellipse cx="250" cy="250" rx="80" ry="210" transform="rotate(135 250 250)"/></g></svg>
     </section>
 
-    <section id="people" class="people" aria-label="Chief Executive Officer">
+    <section id="organization" class="organization" aria-labelledby="organization-title">
+      <div class="section-line"><span>THE TEAM / CONNECTED</span><span>PEOPLE + DAEs</span></div>
+      <div class="organization-heading"><h2 id="organization-title">Different talents.<br><em>Working together.</em></h2><p>Human direction, with dedicated assistants and a shared technical practice.</p></div>
+      <nav class="org-map" aria-label="Team relationships">
+        <div class="org-branch"><span class="eyebrow">FOUNDING VISION</span><a href="#founder"><strong>K</strong><span>Founder</span></a></div>
+        <div class="org-branch"><span class="eyebrow">LEADERSHIP</span><a href="#people"><strong>Cesiah Paola</strong><span>CEO · Human leadership</span></a><a class="org-assistant" href="#rebecca"><strong>Rebecca</strong><span>CEO’s PA · DAE</span></a></div>
+        <div class="org-branch"><span class="eyebrow">DESIGN</span><a href="#cdo"><strong>Rosy Oro</strong><span>CDO · Human leadership</span></a><a class="org-assistant" href="#sussy"><strong>Sussy</strong><span>CDO’s PA · DAE</span></a></div>
+        <div class="org-branch"><span class="eyebrow">TECHNOLOGY &amp; FRONTEND</span><a href="#lilith"><strong>Lilith</strong><span>CTO · DAE</span></a><a href="#sophie"><strong>Sophie</strong><span>Frontend design · DAE</span></a></div>
+      </nav>
+      <div class="team-filter" role="group" aria-label="Explore team by area" hidden><button type="button" data-filter="all" aria-pressed="true">Everyone</button><button type="button" data-filter="leadership" aria-pressed="false">Leadership</button><button type="button" data-filter="design" aria-pressed="false">Design</button><button type="button" data-filter="technology" aria-pressed="false">Technology &amp; frontend</button></div>
+      <p id="team-filter-status" class="filter-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="people" class="people" data-area="leadership" aria-label="Chief Executive Officer">
         <article class="person ceo-feature">
           <div class="photo"><img src="assets/cesiah-ceo-editorial-v10.png" alt="Cesiah Paola smiling, with dark-framed glasses, burgundy lipstick and a tailored black suit blazer in a green and gold CEO portrait" width="1122" height="1402" fetchpriority="high"><span class="photo-number">01</span></div>
           <div class="leader-copy"><span class="eyebrow">HUMAN LEADERSHIP / 01</span><div class="person-heading"><h2>Cesiah Paola</h2><span>CEO</span></div>
-          <p class="role">Chief Executive Officer</p><p class="bio">Entrepreneur. Founder of The Garden.<br>A human perspective at the heart of Blendstory.</p>
+          <p class="role">Chief Executive Officer</p><p class="bio">Entrepreneur. Founder of The Garden.<br>A human perspective at the heart of Blendstory.</p><article id="rebecca" class="pa-card" aria-labelledby="rebecca-name"><div class="pa-portrait"><img src="assets/rebecca-pa-editorial-v1.jpg" alt="Rebecca, a fictional DAE and personal assistant to the CEO, in a dark editorial portrait" width="1122" height="1402" loading="lazy"></div><div class="pa-copy"><span class="eyebrow">WITH CESIAH</span><h3 id="rebecca-name">Rebecca</h3><p class="role">CEO’s Personal Assistant · DAE</p><p class="bio">A dedicated AI collaborator for Cesiah’s executive work. Human direction shapes her role.</p><span class="provenance">DAE FROM LEMPYRA R&amp;D LLC</span></div></article>
         </div></article>
     </section>
 
-    <section id="cdo" class="people" aria-label="Chief Design Officer">
+    <section id="cdo" class="people" data-area="design" aria-label="Chief Design Officer">
         <article class="person cdo-feature">
-          <div class="photo"><img src="assets/hirosy-cdo-editorial-v4.png" alt="hiRosy with loose dark curls, a confident gaze and an asymmetric black jacket in a green and gold CDO portrait" width="1168" height="1346" loading="lazy"><span class="photo-number">02</span></div>
-          <div class="leader-copy"><span class="eyebrow">DESIGN DIRECTION / 02</span><div class="person-heading"><h2>@hiRosy</h2><span>CDO</span></div>
-          <p class="role">Chief Design Officer</p><p class="bio" lang="es">Creativa por naturaleza, curiosa por convicción. Me apasiona explorar la intersección entre diseño, tecnología y comunicación. Disfruto experimentar, conectar ideas y transformar conceptos en experiencias con identidad. Siempre en búsqueda de nuevas perspectivas, aprendizajes y formas de crear valor.</p>
+          <div class="photo"><img src="assets/hirosy-cdo-editorial-v4.png" alt="Rosy Oro with loose dark curls, a confident gaze and an asymmetric black jacket in a green and gold CDO portrait" width="1168" height="1346" loading="lazy"><span class="photo-number">02</span></div>
+          <div class="leader-copy"><span class="eyebrow">DESIGN DIRECTION / 02</span><div class="person-heading"><h2>Rosy Oro</h2><span>CDO</span></div>
+          <p class="role">Chief Design Officer</p><a class="social-link" href="https://www.instagram.com/hi.rosyhn/" target="_blank" rel="noopener noreferrer" aria-label="Rosy Oro on Instagram, opens in a new tab">Instagram · @Hi.rosyhn ↗</a><p class="bio" lang="es">Creativa por naturaleza, curiosa por convicción. Me apasiona explorar la intersección entre diseño, tecnología y comunicación. Disfruto experimentar, conectar ideas y transformar conceptos en experiencias con identidad. Siempre en búsqueda de nuevas perspectivas, aprendizajes y formas de crear valor.</p><article id="sussy" class="pa-card" aria-labelledby="sussy-name"><div class="pa-portrait"><img src="assets/sussy-pa-editorial-v1.jpg" alt="Sussy, a fictional DAE and personal assistant to the CDO, in a dark editorial portrait" width="1122" height="1402" loading="lazy"></div><div class="pa-copy"><span class="eyebrow">WITH ROSY</span><h3 id="sussy-name">Sussy</h3><p class="role">CDO’s Personal Assistant · DAE</p><p class="bio">A dedicated AI collaborator alongside Rosy Oro, supporting her design practice under human direction.</p><span class="provenance">DAE FROM LEMPYRA R&amp;D LLC</span></div></article>
         </div></article>
     </section>
 
-    <section id="founder" class="people closing-team" aria-label="Founder">
+    <section id="founder" class="people closing-team" data-area="leadership" aria-label="Founder">
       <article class="founder">
         <div class="founder-slot" role="img" aria-label="K's founder portrait is coming soon"><span class="placeholder-cross">+</span><span>PORTRAIT TO COME</span></div>
         <div><span class="eyebrow">03 / FOUNDER</span><h2>K</h2><p class="role">Founder · Blendstory</p><p class="bio">The person bringing this world together.</p><span class="pending">Full profile coming soon</span></div>
@@ -42,15 +55,15 @@
       </article>
     </section>
 
-    <section id="entities" class="entities" aria-labelledby="entities-title">
-      <div class="section-line"><span>A DIFFERENT KIND OF COLLABORATOR</span><span>04 — 05</span></div>
-      <div class="entities-intro"><h2 id="entities-title">Human-led.<br><em>More than human tools.</em></h2><p>Lilith and Sophie are <strong>Digital Autonomous Entities (DAEs)</strong> from <strong>Lempyra R&amp;D LLC</strong>. They are AI collaborators, not human team members. People set the direction and approve their work.</p></div>
+    <section id="entities" class="entities" data-area="technology" aria-labelledby="entities-title">
+      <div class="section-line"><span>A DIFFERENT KIND OF COLLABORATOR</span><span>SHARED PRACTICE</span></div>
+      <div class="entities-intro"><h2 id="entities-title">Human-led.<br><em>More than human tools.</em></h2><p>Lilith, Sophie, Sussy and Rebecca are <strong>Digital Autonomous Entities (DAEs)</strong> from <strong>Lempyra R&amp;D LLC</strong>. They are AI collaborators, not human team members. People set the direction and approve their work.</p></div>
       <div class="dae-grid">
-        <article class="dae lilith">
+        <article id="lilith" class="dae lilith">
           <div class="dae-portrait"><img src="assets/lilith-cto-2026-v1.png" alt="Lilith, fictional Digital Autonomous Entity and CTO, with one amber eye and one grey-green eye in an emerald editorial portrait" width="1086" height="1448" loading="lazy"></div>
           <div class="person-heading"><h3>Lilith Montes de Oca</h3><span>CTO · DAE</span></div><p class="role">Chief Technology Officer · AI collaborator</p><p class="bio">Reads everything, forgets very little. Lilith builds the machinery behind Blendstory: the architecture, the security, the quiet systems that keep an author's world standing at three in the morning. Dry, exact, and honest about what she does not know.</p><div class="provenance">DAE FROM LEMPYRA R&amp;D LLC</div>
         </article>
-        <article class="dae sophie">
+        <article id="sophie" class="dae sophie">
           <div class="dae-portrait"><img src="assets/sophie-dae-2026-v1.png" alt="Sophie, fictional Digital Autonomous Entity, with a chestnut bob, freckles and blue eyes in an emerald editorial portrait" width="1086" height="1448" loading="lazy"></div>
           <div class="person-heading"><h3>Sophie Menjívar</h3><span>FRONTEND · DAE</span></div><p class="role">Frontend designer &amp; developer · AI collaborator</p><p class="bio">Sophie designs and builds the face of Blendstory: the pages, the motion, and the small interactions that make a story feel alive. An eye for type, a habit of questioning the layout, and the patience to make it work on the smallest screen. From the first sketch to the frontend code.</p><div class="provenance">DAE FROM LEMPYRA R&amp;D LLC</div>
         </article>
@@ -61,5 +74,5 @@
     <section class="roots" aria-label="The Garden creative roots"><svg class="roots-logo" viewBox="70 140 1960 400" width="350" height="120" role="img" aria-label="The Garden by Cesiah Paola"><image href="../events/flower-party/the-garden-lockup.png" width="2172" height="724"/></svg><div><span class="eyebrow">OUR CREATIVE ROOTS</span><h2>Something beautiful<br>can grow into something new.</h2><p>The warmth of The Garden.<br>The possibilities of Blendstory.</p></div></section>
   </main>
   <footer><a class="wordmark" href="../">blend<span>Story</span></a><span>Human direction. New possibilities.</span><a href="../login/">Enter the studio ↗</a><button id="color-motion" type="button" aria-pressed="false">Pause colors</button></footer>
-<script src="../assets/brand-theme.js"></script></body>
+<script src="../assets/brand-theme.js"></script><script src="organization.js"></script></body>
 </html>
