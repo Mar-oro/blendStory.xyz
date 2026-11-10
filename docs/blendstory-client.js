@@ -1,48 +1,8 @@
-// blendstory-client.js — text + image generation client for blendStory.xyz.
-//
-// Headless transport. No DOM, no CSS. Drop into any blendStory page that
-// already has the auth-guard, instantiate, call methods. Storage keys
-// (sessionStorage + IndexedDB) are pinned to the `blendstory_` namespace.
-//
-//   const client = new BlendStoryClient();    // defaults to sar1a.lempyra.com
-//
-//   // streaming chat for story writing
-//   await client.chat({
-//     model: 'llama-3.1-8b',
-//     messages: [{ role: 'system', content: '...' }, { role: 'user', content: '...' }],
-//     onDelta: (chunk) => append(chunk),
-//   });
-//
-//   // submit + poll + fetch an image in one call
-//   const { jobId, job, blobs } = await client.generateAndFetch({
-//     model:  'sdxl-base',
-//     prompt: 'amber street, rain-slicked asphalt, neon noir',
-//     steps:  30, seed: -1,
-//   });
-//
-//   // persist to IndexedDB (prefix-scoped: blendstory_imgStore)
-//   await client.stores().imgStore.put({
-//     id: jobId, ts: Date.now(), prompt: '...', blob: blobs[0].blob,
-//   });
-//
-// AUTH:
-//   Reads sessionStorage.blendstory_token for every sar1a request. On 401,
-//   attempts a single refresh via /auth/refresh using blendstory_refresh,
-//   retries the call once. Never navigates — the page's auth-guard owns
-//   redirect logic.
-//
-// NO AUTO-POLL:
-//   Hosts/models are queried only when the caller invokes models() or
-//   chat()/imageModels() explicitly. The only poll loop is poll(jobId) for
-//   a single active image job (job-state, not model-list). See
-//   feedback_no_auto_probe.md for the rationale.
+// Blendstory text/image transport; same-site HttpOnly OTP session. No browser bearer tokens.
 (function (global) {
   'use strict';
 
-  const PREFIX     = 'blendstory';
-  const TOKEN_KEY  = `${PREFIX}_token`;
-  const REFRESH_KEY = `${PREFIX}_refresh`;
-  const USER_KEY   = `${PREFIX}_user`;
+  const PREFIX = 'blendstory';
 
   // ─── IndexedDB store factory ──────────────────────────────────────────────
   function createStore({ dbName, storeName = 'records', capBytes, maxRecords }) {
@@ -205,64 +165,18 @@
 
   // ─── BlendStoryClient ─────────────────────────────────────────────────────
   class BlendStoryClient {
-    constructor({
-      sar1a    = 'https://sar1a.lempyra.com',
-      clientId = 'portal',
-    } = {}) {
-      this.sar1a       = sar1a.replace(/\/$/, '');
-      this.clientId    = clientId;
-      this._stores     = null;
-      this._refreshing = null;
-    }
-
-    // ── Auth helpers ──────────────────────────────────────────────────────
-    token() { return sessionStorage.getItem(TOKEN_KEY); }
-    user()  { return sessionStorage.getItem(USER_KEY); }
-    _authHeader() {
-      const t = this.token();
-      return t ? { 'Authorization': `Bearer ${t}` } : {};
-    }
-    async refresh() {
-      if (this._refreshing) return this._refreshing;
-      this._refreshing = (async () => {
-        const rt = sessionStorage.getItem(REFRESH_KEY);
-        if (!rt) return false;
-        try {
-          const r = await fetch(this.sar1a + '/auth/refresh', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              grant_type:    'refresh_token',
-              refresh_token: rt,
-              client_id:     this.clientId,
-            }),
-          });
-          if (!r.ok) return false;
-          const data = await r.json();
-          if (!data.access_token) return false;
-          sessionStorage.setItem(TOKEN_KEY, data.access_token);
-          if (data.refresh_token) sessionStorage.setItem(REFRESH_KEY, data.refresh_token);
-          return true;
-        } catch (_) {
-          return false;
-        } finally {
-          setTimeout(() => { this._refreshing = null; }, 0);
-        }
-      })();
-      return this._refreshing;
-    }
-
+    constructor() { this._stores = null; this.api = StudioSession.client(); }
+    get sar1a() { return this.api.base(); }
     async _fetch(url, init = {}) {
-      const merge = () => ({
-        ...init,
-        headers: { ...(init.headers || {}), ...this._authHeader() },
-      });
-      let r = await fetch(url, merge());
-      if (r.status === 401) {
-        const ok = await this.refresh();
-        if (ok) r = await fetch(url, merge());
+      const target = new URL(url);
+      if(target.origin !== this.api.base()) throw new Error('Unsupported service origin.');
+      const response = await this.api.request(target.pathname + target.search, init);
+      if([401,402,403].includes(response.status)) {
+        const error = Object.assign(new Error('Studio access is unavailable.'), {status:response.status});
+        global.StudioAccess?.lock(error);
+        throw error;
       }
-      return r;
+      return response;
     }
 
     // ── Model probes ──────────────────────────────────────────────────────
@@ -377,6 +291,7 @@
           if (job.status === 'done' || job.status === 'failed') return job;
           backoff = intervalMs;
         } catch (e) {
+          if ([401,402,403].includes(e.status) || e.name === 'AbortError') throw e;
           if (e.status === 404) {
             backoff = Math.min(backoff * 1.5, 60000);
             if (backoff >= 60000) return null;
