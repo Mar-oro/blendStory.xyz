@@ -15,7 +15,7 @@
   </svg>
   <path d="M56 128H664" stroke="#d8c8aa"/>
   <text x="664" y="172" text-anchor="end" font-size="17" class="gold small">EDICIÓN ÚTILA</text>
-  <image href="utila-el-tiempo.webp" x="40" y="346" width="640" height="346" preserveAspectRatio="xMidYMid slice"/>
+  <image href="utila-beach-reference.webp" x="40" y="346" width="640" height="346" preserveAspectRatio="xMidYMid slice"/>
   <text x="55" y="242" font-size="98" class="serif">Flower</text>
   <text x="51" y="335" font-size="105" class="serif gold" font-style="italic">Party</text>
   <text x="664" y="330" text-anchor="end" font-size="20" class="gold small">× THE GARDEN</text>
@@ -23,14 +23,14 @@
   <text x="56" y="808" font-size="21" class="muted">
     <tspan x="56">Creá tu ramo de flores frescas, disfrutá</tspan>
     <tspan x="56" dy="32">drinks y conectá con otras mujeres</tspan>
-    <tspan x="56" dy="32">en ecothing[k]s, Útila, Honduras.</tspan>
+    <tspan x="56" dy="32">en <a href="https://www.instagram.com/ecothingks/" target="_blank" rel="noopener noreferrer" aria-label="ecothing[k]s en Instagram"><tspan text-decoration="underline">ecothing[k]s</tspan></a>, Útila, Honduras.</tspan>
   </text>
   <text x="56" y="924" font-size="15" class="gold small">INCLUYE TU RAMO + DRINKS</text>
   <path d="M56 951H664" stroke="#c3ad80"/>
   <text x="56" y="990" font-size="16" class="gold small">SÁBADO 21 DE NOVIEMBRE · 2026</text>
   <text x="56" y="1044" font-size="34" class="serif">Útila · Honduras</text>
   <text x="664" y="1044" text-anchor="end" font-size="52" class="serif gold">US$50</text>
-  <text x="56" y="1090" font-size="22" class="serif">En ecothing[k]s · Útila</text>
+  <text x="56" y="1090" font-size="22" class="serif">En <a href="https://www.instagram.com/ecothingks/" target="_blank" rel="noopener noreferrer" aria-label="ecothing[k]s en Instagram"><tspan text-decoration="underline">ecothing[k]s</tspan></a> · Útila</text>
   <path d="M56 1130H664" stroke="#d8c8aa"/>
   <text x="56" y="1162" font-size="22" class="serif">The Garden by Cesiah Paola</text>
   <text x="56" y="1194" font-size="15" class="muted">Horario por confirmar. Consultá por WhatsApp.</text>
