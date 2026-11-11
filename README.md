@@ -152,3 +152,9 @@ delay = distance × 50ms
 **Last Updated**: 2024-12-17  
 **Status**: Live  
 **Latest Version**: `blendstory-final.html`
+
+## Public site publishing
+
+- Use clearly fictional values in mocks, fixtures, comments, and tests. Keep real Telegram or WhatsApp IDs, email addresses, phone numbers, and keys out of these files.
+- Before each push, search `git diff --cached` for long digit sequences, email addresses, and known real usernames. Check the diffs of any commits already queued to push, too.
+- Treat every file under `docs/` as public, even if no page loads it. Delete files that do not belong on the public site.

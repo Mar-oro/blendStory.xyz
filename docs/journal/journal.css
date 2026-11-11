@@ -1,0 +1,47 @@
+.journal-publications {
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 1px solid var(--brand-line);
+}
+
+.journal-publications article {
+  margin-top: 24px;
+}
+
+.journal-publications h3 {
+  margin: 8px 0;
+  font: 400 32px Georgia, serif;
+}
+
+.journal-publications h3 a:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.journal-article {
+  max-width: 68ch;
+  margin-inline: auto;
+}
+
+.journal-article h1 {
+  margin-bottom: 12px;
+}
+
+.journal-placeholder {
+  font-size: 13px;
+}
+
+.journal-prose {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--brand-line);
+}
+
+.journal-prose p {
+  font-size: clamp(17px, 2.1vw, 20px);
+  line-height: 1.75;
+}
+
+.journal-prose p + p {
+  margin-top: 1em;
+}
