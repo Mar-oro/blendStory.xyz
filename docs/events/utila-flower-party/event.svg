@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1280" viewBox="0 0 720 1280" role="img" aria-labelledby="poster-title poster-description">
+  <title id="poster-title">Flower Party en Útila × The Garden</title>
+  <desc id="poster-description">Sábado 21 de noviembre de 2026. Flower Party en Útila, Islas de la Bahía, Honduras. Diseñá tu ramo con flores frescas y disfrutá drinks de BerryWildHN. L1,000. Horario y punto de encuentro por confirmar.</desc>
+  <style>
+    text{fill:#244438;font-family:Arial,Helvetica,sans-serif}
+    .serif{font-family:Georgia,"Times New Roman",serif}
+    .gold{fill:#947749}
+    .muted{fill:#69725f}
+    .small{letter-spacing:2px}
+  </style>
+  <rect width="720" height="1280" fill="#fcfaf5"/>
+  <rect x="28" y="28" width="664" height="1224" fill="none" stroke="#c3ad80" stroke-width=".8"/>
+  <svg x="56" y="8" width="608" height="112" viewBox="70 140 1960 400" preserveAspectRatio="xMidYMid meet" aria-label="The Garden by Cesiah Paola">
+    <image href="../flower-party/the-garden-lockup.png" width="2172" height="724"/>
+  </svg>
+  <path d="M56 128H664" stroke="#d8c8aa"/>
+  <text x="664" y="172" text-anchor="end" font-size="17" class="gold small">EDICIÓN ÚTILA</text>
+  <image href="utila-el-tiempo.webp" x="40" y="346" width="640" height="346" preserveAspectRatio="xMidYMid slice"/>
+  <text x="55" y="242" font-size="98" class="serif">Flower</text>
+  <text x="51" y="335" font-size="105" class="serif gold" font-style="italic">Party</text>
+  <text x="664" y="330" text-anchor="end" font-size="20" class="gold small">× THE GARDEN</text>
+  <text x="56" y="756" font-size="38" class="serif">Florecer en el Caribe.</text>
+  <text x="56" y="808" font-size="21" class="muted">
+    <tspan x="56">Creá tu ramo de flores frescas, disfrutá</tspan>
+    <tspan x="56" dy="32">drinks de BerryWildHN y conectá con mujeres</tspan>
+    <tspan x="56" dy="32">en Útila, Islas de la Bahía, Honduras.</tspan>
+  </text>
+  <text x="56" y="924" font-size="15" class="gold small">INCLUYE TU RAMO + DRINKS</text>
+  <path d="M56 951H664" stroke="#c3ad80"/>
+  <text x="56" y="990" font-size="16" class="gold small">SÁBADO 21 DE NOVIEMBRE · 2026</text>
+  <text x="56" y="1044" font-size="34" class="serif">Útila · Honduras</text>
+  <text x="664" y="1044" text-anchor="end" font-size="52" class="serif gold">L1,000</text>
+  <text x="56" y="1090" font-size="19" class="muted">Horario y punto de encuentro por confirmar.</text>
+  <path d="M56 1130H664" stroke="#d8c8aa"/>
+  <text x="56" y="1162" font-size="22" class="serif">The Garden by Cesiah Paola</text>
+  <text x="56" y="1194" font-size="15" class="muted">Consultá disponibilidad por WhatsApp.</text>
+  <a href="https://www.instagram.com/thegardenbycesiahpaola/" target="_blank" rel="noopener noreferrer">
+    <text x="56" y="1227" font-size="17" class="gold">Instagram · @thegardenbycesiahpaola ↗</text>
+  </a>
+</svg>
