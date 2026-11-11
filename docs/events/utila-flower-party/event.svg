@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="720" height="1280" viewBox="0 0 720 1280" role="img" aria-labelledby="poster-title poster-description">
   <title id="poster-title">Flower Party en Útila × The Garden</title>
-  <desc id="poster-description">Sábado 21 de noviembre de 2026. Flower Party en Útila, Islas de la Bahía, Honduras. Diseñá tu ramo con flores frescas y disfrutá drinks de BerryWildHN. US$50. Horario y punto de encuentro por confirmar.</desc>
+  <desc id="poster-description">Sábado 21 de noviembre de 2026. Flower Party en Útila, Islas de la Bahía, Honduras. Diseñá tu ramo con flores frescas y disfrutá drinks. US$50. Lugar: ecothing[k]s · Útila. Horario por confirmar.</desc>
   <style>
     text{fill:#244438;font-family:Arial,Helvetica,sans-serif}
     .serif{font-family:Georgia,"Times New Roman",serif}
@@ -22,18 +22,18 @@
   <text x="56" y="756" font-size="38" class="serif">Florecer en el Caribe.</text>
   <text x="56" y="808" font-size="21" class="muted">
     <tspan x="56">Creá tu ramo de flores frescas, disfrutá</tspan>
-    <tspan x="56" dy="32">drinks de BerryWildHN y conectá con mujeres</tspan>
-    <tspan x="56" dy="32">en Útila, Islas de la Bahía, Honduras.</tspan>
+    <tspan x="56" dy="32">drinks y conectá con otras mujeres</tspan>
+    <tspan x="56" dy="32">en ecothing[k]s, Útila, Honduras.</tspan>
   </text>
   <text x="56" y="924" font-size="15" class="gold small">INCLUYE TU RAMO + DRINKS</text>
   <path d="M56 951H664" stroke="#c3ad80"/>
   <text x="56" y="990" font-size="16" class="gold small">SÁBADO 21 DE NOVIEMBRE · 2026</text>
   <text x="56" y="1044" font-size="34" class="serif">Útila · Honduras</text>
   <text x="664" y="1044" text-anchor="end" font-size="52" class="serif gold">US$50</text>
-  <text x="56" y="1090" font-size="19" class="muted">Horario y punto de encuentro por confirmar.</text>
+  <text x="56" y="1090" font-size="22" class="serif">En ecothing[k]s · Útila</text>
   <path d="M56 1130H664" stroke="#d8c8aa"/>
   <text x="56" y="1162" font-size="22" class="serif">The Garden by Cesiah Paola</text>
-  <text x="56" y="1194" font-size="15" class="muted">Consultá disponibilidad por WhatsApp.</text>
+  <text x="56" y="1194" font-size="15" class="muted">Horario por confirmar. Consultá por WhatsApp.</text>
   <a href="https://www.instagram.com/thegardenbycesiahpaola/" target="_blank" rel="noopener noreferrer">
     <text x="56" y="1227" font-size="17" class="gold">Instagram · @thegardenbycesiahpaola ↗</text>
   </a>
