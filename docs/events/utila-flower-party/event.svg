@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="720" height="1280" viewBox="0 0 720 1280" role="img" aria-labelledby="poster-title poster-description">
   <title id="poster-title">Flower Party en Útila × The Garden</title>
-  <desc id="poster-description">Sábado 21 de noviembre de 2026. Flower Party en Útila, Islas de la Bahía, Honduras. Diseñá tu ramo con flores frescas y disfrutá drinks de BerryWildHN. L1,000. Horario y punto de encuentro por confirmar.</desc>
+  <desc id="poster-description">Sábado 21 de noviembre de 2026. Flower Party en Útila, Islas de la Bahía, Honduras. Diseñá tu ramo con flores frescas y disfrutá drinks de BerryWildHN. US$50. Horario y punto de encuentro por confirmar.</desc>
   <style>
     text{fill:#244438;font-family:Arial,Helvetica,sans-serif}
     .serif{font-family:Georgia,"Times New Roman",serif}
@@ -29,7 +29,7 @@
   <path d="M56 951H664" stroke="#c3ad80"/>
   <text x="56" y="990" font-size="16" class="gold small">SÁBADO 21 DE NOVIEMBRE · 2026</text>
   <text x="56" y="1044" font-size="34" class="serif">Útila · Honduras</text>
-  <text x="664" y="1044" text-anchor="end" font-size="52" class="serif gold">L1,000</text>
+  <text x="664" y="1044" text-anchor="end" font-size="52" class="serif gold">US$50</text>
   <text x="56" y="1090" font-size="19" class="muted">Horario y punto de encuentro por confirmar.</text>
   <path d="M56 1130H664" stroke="#d8c8aa"/>
   <text x="56" y="1162" font-size="22" class="serif">The Garden by Cesiah Paola</text>
