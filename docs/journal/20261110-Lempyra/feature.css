@@ -50,13 +50,16 @@
   line-height: 1.8;
 }
 .feature-cover { margin-top: 36px; }
-.feature-cover > img {
+.feature-inset { margin: 30px 0; }
+.feature-cover > img,
+.feature-inset > img {
   display: block;
   width: 100%;
   height: auto;
   border: 1px solid #282719;
 }
-.feature-cover figcaption {
+.feature-cover figcaption,
+.feature-inset figcaption {
   margin-top: 12px;
   color: #a4936f;
   font: 11px/1.7 Arial, sans-serif;
