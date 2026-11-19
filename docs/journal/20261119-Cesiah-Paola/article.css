@@ -1,0 +1,18 @@
+.portrait-masthead{display:grid;grid-template-columns:1fr 1fr;gap:7%;align-items:center;padding-bottom:42px;border-bottom:1px solid var(--brand-line)}
+.portrait-heading{min-width:0}.portrait-heading .feature-category{flex-wrap:wrap;font-size:10px;gap:10px 20px}
+.portrait-heading h1{font:400 clamp(68px,8vw,122px)/.98 Georgia,serif;letter-spacing:-.055em;margin:32px 0 28px}
+.portrait-heading h1 em{font-weight:400;color:var(--accent)}
+.portrait-deck{font:400 clamp(23px,2.4vw,34px)/1.35 Georgia,serif;color:#cbb780;max-width:420px}
+.portrait-intro{font-size:15px;line-height:1.9;max-width:440px;margin-top:24px}
+.portrait-cover img{display:block;width:100%;height:auto;border:1px solid var(--brand-line)}
+.portrait-cover figcaption,.moving-image figcaption,.garden-qr figcaption{font:11px/1.7 Arial,sans-serif;color:#a4936f;margin-top:12px}
+.motion-spread{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1fr);gap:28px;align-items:start;margin-top:28px}
+.moving-image video{display:block;width:100%;height:auto;aspect-ratio:9/16;background:#031009;border:1px solid var(--brand-line)}
+.motion-toggle{display:block;margin-top:12px;min-height:44px;padding:10px 15px;border:1px solid #31553e;background:#000;color:var(--accent);font:12px/1.4 Arial,sans-serif;cursor:pointer}
+.motion-toggle[hidden]{display:none}.motion-toggle:hover{border-color:var(--accent)}
+.motion-copy p{font-size:16px;line-height:1.8}
+.garden-qr{display:grid;grid-template-columns:minmax(160px,240px) minmax(0,1fr);gap:26px;align-items:center;padding-top:30px;margin-top:36px;border-top:1px solid var(--brand-line)}
+.garden-qr img{display:block;width:100%;height:auto;background:#fff}.garden-qr a{display:inline-block}.garden-qr figcaption{max-width:280px;margin:0;font-size:12px;line-height:1.9}
+@media(max-width:1000px){.portrait-heading h1{font-size:clamp(66px,8vw,96px)}.portrait-deck{font-size:25px}.portrait-intro{font-size:14px}.motion-spread{grid-template-columns:1fr}.moving-image{max-width:350px}.motion-copy p{font-size:17px}}
+@media(max-width:700px){.portrait-masthead{grid-template-columns:1fr;gap:30px;padding-bottom:30px}.portrait-heading h1{font-size:clamp(66px,17vw,100px);margin:26px 0}.portrait-intro{font-size:15px}.portrait-cover{max-width:540px}.motion-spread{gap:24px}.moving-image{max-width:360px;width:100%;margin:auto}.garden-qr{grid-template-columns:1fr;gap:18px}.garden-qr>a{max-width:280px}.garden-qr figcaption{max-width:100%}}
+@media(prefers-reduced-motion:reduce){.cesiah-editorial{scroll-behavior:auto}}
