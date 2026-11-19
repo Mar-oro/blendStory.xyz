@@ -177,3 +177,12 @@
   .feature-contents nav { flex-direction: row; flex-wrap: wrap; gap: 14px 24px; }
   .feature-body section + section { margin-top: 40px; }
 }
+
+.feature-byline a{text-decoration:underline;text-underline-offset:3px}
+.feature-author{display:flex;align-items:center;gap:18px;padding-bottom:26px;margin-bottom:24px;border-bottom:1px solid var(--brand-line)}
+.feature-author>img{display:block;flex:0 0 60px;width:60px;height:80px;object-fit:cover;border:1px solid var(--brand-line)}
+.feature-author>div{min-width:0}
+.author-label{display:block;font:10px/1.7 Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#a4936f}
+.feature-body .author-name{display:inline-block;margin-top:5px;font:italic 400 clamp(23px,3vw,30px)/1.3 Georgia,serif;color:#cbb780}
+.feature-body .feature-author p{font-size:11px;line-height:1.8;margin-top:8px}
+@media(max-width:420px){.feature-author{gap:14px;align-items:flex-start}.feature-author>img{flex-basis:48px;width:48px;height:64px}}
