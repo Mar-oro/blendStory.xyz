@@ -1,0 +1,37 @@
+.portrait-masthead {
+  display: grid;
+  grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+  gap: 7%;
+  align-items: center;
+  padding-bottom: 42px;
+  border-bottom: 1px solid var(--brand-line);
+}
+.portrait-heading, .portrait-cover { min-width: 0; }
+.portrait-heading .feature-category { flex-wrap: wrap; font-size: 12px; gap: 10px 20px; }
+.portrait-heading h1 {
+  font: 400 clamp(52px, 6.6vw, 96px)/1.02 Georgia, serif;
+  letter-spacing: -.045em;
+  margin: 30px 0 26px;
+}
+.portrait-heading h1 em { font-weight: 400; color: var(--accent); }
+.portrait-deck { font: 400 clamp(24px, 2.4vw, 34px)/1.35 Georgia, serif; color: #cbb780; max-width: 440px; }
+.portrait-intro { font-size: 16px; line-height: 1.85; max-width: 460px; margin-top: 24px; }
+.portrait-cover { max-width: 1168px; }
+.portrait-cover img { display: block; width: 100%; max-width: 100%; height: auto; border: 1px solid var(--brand-line); }
+.portrait-cover figcaption { font: 12px/1.7 Arial, sans-serif; color: #a4936f; margin-top: 12px; }
+.portrait-cover figcaption a { text-decoration: underline; text-underline-offset: 3px; }
+.sussy-editorial .feature-byline { font-size: 14px; }
+.sussy-editorial .feature-contents > p, .sussy-editorial .feature-contents nav { font-size: 14px; }
+.sussy-editorial .feature-body .article-signature { margin-top: 28px; color: #cbb780; }
+.sussy-editorial .author-label { font-size: 12px; }
+.sussy-editorial .feature-author p { font-size: 12px; }
+@media (max-width: 1000px) {
+  .portrait-heading h1 { font-size: clamp(48px, 6.6vw, 70px); }
+  .portrait-deck { font-size: 25px; }
+}
+@media (max-width: 700px) {
+  .portrait-masthead { grid-template-columns: minmax(0, 1fr); gap: 30px; padding-bottom: 30px; }
+  .portrait-heading h1 { font-size: clamp(48px, 12vw, 78px); margin: 26px 0; }
+  .portrait-cover { width: 100%; max-width: 540px; }
+  .portrait-heading .feature-category { font-size: 12px; }
+}
