@@ -1,14 +1,14 @@
 {
   "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
-  "name": "Sussy",
-  "description": "A dedicated AI collaborator supporting a designer's practice under human direction.",
+  "name": "Rebecca",
+  "description": "A dedicated AI collaborator supporting an executive's work under human direction.",
   "version": "1.0.0",
-  "image": "https://blendstory.xyz/team/assets/sussy-pa-editorial-v1.jpg",
+  "image": "https://blendstory.xyz/team/assets/rebecca-pa-editorial-v1.jpg",
   "provider": {
     "organization": "Lempyra R&D",
     "url": "PENDING"
   },
-  "documentationUrl": "PENDING",
+  "documentationUrl": "https://blendstory.xyz/agents/rebecca/",
   "supportedInterfaces": [
     {
       "url": "PENDING",
