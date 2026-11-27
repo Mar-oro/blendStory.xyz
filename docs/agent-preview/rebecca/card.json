@@ -1,0 +1,74 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "Rebecca",
+  "description": "A dedicated AI collaborator supporting an executive's work under human direction.",
+  "version": "1.0.0",
+  "image": "https://blendstory.xyz/team/assets/rebecca-pa-editorial-v1.jpg",
+  "provider": {
+    "organization": "Lempyra R&D",
+    "url": "PENDING"
+  },
+  "documentationUrl": "PENDING",
+  "supportedInterfaces": [
+    {
+      "url": "PENDING",
+      "protocolBinding": "PENDING",
+      "protocolVersion": "PENDING"
+    }
+  ],
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extensions": [
+      {
+        "uri": "https://docs.concordium.com/a2a-extensions/concordium-badge/v1",
+        "required": false,
+        "params": {
+          "tokenAddress": null,
+          "owner": {
+            "account": "ccd:4221332d34e1694168c2a0c0b3fd0f27:3viXtQEuj9Q5QNRvvWDQ3vBUPZYnk5Z7eAZxxZPrcgyJwX8fWY"
+          },
+          "contracts": {
+            "cis8004": "PENDING",
+            "cis8": "PENDING"
+          },
+          "verify": "Check registration, ownership, Active status, and that the SHA-256 of the public response matches metadata_hash.",
+          "verification": {
+            "service": "Concordium Agent Registry",
+            "verifyUrl": "PENDING",
+            "mcp": "https://agent-registry-mcp.concordium.com/mcp",
+            "docs": "https://docs.concordium.com/en/mainnet/technical-reference/agent-registry/concordium-badge.html"
+          }
+        }
+      }
+    ]
+  },
+  "defaultInputModes": [
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "PENDING",
+      "name": "PENDING",
+      "description": "PENDING",
+      "tags": [
+        "PENDING"
+      ]
+    },
+    {
+      "id": "PENDING",
+      "name": "PENDING",
+      "description": "PENDING",
+      "tags": [
+        "PENDING"
+      ]
+    }
+  ],
+  "services": [],
+  "x402Support": false,
+  "active": false,
+  "registrations": []
+}
